@@ -1244,3 +1244,12 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         padding-bottom: 20px;
     }
 }
+/* =========================================
+   ARREGLO: SUBIR BOTÓN WHATSAPP EN MÓVIL
+   ========================================= */
+@media (max-width: 992px) {
+    .cart-footer {
+        /* Esto le da espacio extra abajo para que no lo tapen los botones del cel */
+        padding-bottom: 80px !important; 
+    }
+}
