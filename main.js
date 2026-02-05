@@ -34,20 +34,76 @@ let slideInterval;
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
     
-    // IMPORTANTE: Asegurar que el evento del submenú funcione
-    const ropaToggle = document.querySelector('.link-split');
-    if (ropaToggle) {
-        // Remover cualquier listener anterior
-        ropaToggle.removeEventListener('click', toggleSubmenu);
-        ropaToggle.removeEventListener('touchstart', toggleSubmenu);
+    // ============================================
+    // SOLUCIÓN DEFINITIVA PARA SUBMENÚ DE ROPA
+    // ============================================
+    const ropaButton = document.querySelector('.link-split');
+    const ropaSubmenu = document.getElementById('ropaSubmenu');
+    const arrow = document.querySelector('.arrow-icon');
+    let submenuAbierto = false; // Flag de control
+    
+    if (ropaButton && ropaSubmenu) {
+        console.log('✅ Elementos encontrados - Inicializando submenú');
         
-        // Agregar listeners frescos
-        ropaToggle.addEventListener('click', toggleSubmenu, false);
-        ropaToggle.addEventListener('touchstart', function(e) {
-            if (window.innerWidth <= 992) {
-                toggleSubmenu(e);
+        // Asegurar estado inicial
+        ropaSubmenu.style.display = 'none';
+        ropaSubmenu.classList.remove('show');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+        
+        // Evento principal
+        ropaButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            console.log('🖱️ CLIC en botón ROPA detectado');
+            console.log('Estado actual:', submenuAbierto ? 'ABIERTO' : 'CERRADO');
+            
+            // Solo funcionar en móvil
+            if (window.innerWidth > 992) {
+                console.log('⚠️ Modo PC - evento ignorado');
+                return;
             }
-        }, { passive: false });
+            
+            // TOGGLE con flag
+            if (submenuAbierto) {
+                // CERRAR
+                ropaSubmenu.style.display = 'none';
+                ropaSubmenu.classList.remove('show');
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+                submenuAbierto = false;
+                console.log('❌ Submenú CERRADO');
+            } else {
+                // ABRIR
+                ropaSubmenu.style.display = 'block';
+                ropaSubmenu.classList.add('show');
+                if (arrow) arrow.style.transform = 'rotate(180deg)';
+                submenuAbierto = true;
+                console.log('✅ Submenú ABIERTO');
+            }
+        }, true); // useCapture = true
+        
+        // Cerrar submenú cuando seleccionas una opción
+        const subLinks = ropaSubmenu.querySelectorAll('a');
+        subLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                console.log('📌 Clic en subcategoría');
+                if (window.innerWidth <= 992) {
+                    ropaSubmenu.style.display = 'none';
+                    ropaSubmenu.classList.remove('show');
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                    submenuAbierto = false;
+                    
+                    // Cerrar también el menú principal
+                    const menu = document.getElementById('navMenu');
+                    if (menu) menu.classList.remove('active');
+                }
+            });
+        });
+    } else {
+        console.error('❌ ERROR: No se encontraron los elementos del submenú');
+        console.log('ropaButton:', ropaButton);
+        console.log('ropaSubmenu:', ropaSubmenu);
     }
 });
 
@@ -560,56 +616,4 @@ document.querySelectorAll('.nav-link:not(.link-split *)').forEach(link => {
     });
 });
 
-// Cerrar menú cuando se hace clic en un enlace del submenú
-document.querySelectorAll('.dropdown-menu a').forEach(link => {
-    link.addEventListener('click', () => {
-        const menu = document.getElementById('navMenu');
-        if (menu && window.innerWidth <= 992) {
-            menu.classList.remove('active');
-        }
-    });
-});
-
-// 3. Submenú Ropa (ACORDEÓN SIMPLE - Abrir/Cerrar con cada clic)
-function toggleSubmenu(event) {
-    // Detener TODA propagación
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-    }
-    
-    // En PC, no hacer nada (funciona por hover)
-    if (window.innerWidth > 992) {
-        return;
-    }
-
-    const submenu = document.getElementById('ropaSubmenu');
-    const arrow = document.querySelector('.arrow-icon');
-
-    if (!submenu) {
-        console.log('ERROR: No se encontró ropaSubmenu');
-        return;
-    }
-
-    // Toggle simple: si está visible, ocultar. Si está oculto, mostrar.
-    if (submenu.classList.contains('show')) {
-        // CERRAR
-        submenu.classList.remove('show');
-        submenu.style.display = 'none'; // Forzar ocultación
-        if (arrow) {
-            arrow.style.transform = 'rotate(0deg)';
-        }
-        console.log('Submenú CERRADO');
-    } else {
-        // ABRIR
-        submenu.classList.add('show');
-        submenu.style.display = 'block'; // Forzar visualización
-        if (arrow) {
-            arrow.style.transform = 'rotate(180deg)';
-        }
-        console.log('Submenú ABIERTO');
-    }
-    
-    return false; // Extra seguridad
-}
+// El manejo del submenú de ROPA ahora está en DOMContentLoaded arriba
