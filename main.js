@@ -436,7 +436,7 @@ function quickView(id) {
         imagesHtml = `<div class="gallery-container"><div class="main-image-container"><img src="${product.images[0]}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}"></div><div class="thumbnails-row">${thumbnails}</div></div>`;
     } else {
         const imageSrc = product.img || 'https://via.placeholder.com/300?text=Sin+Imagen';
-        imagesHtml = `<div class="main-image-container"><img src="${imageSrc}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}"></div>`;
+        imagesHtml = `<div class="gallery-container"><div class="main-image-container"><img src="${imageSrc}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}"></div></div>`;
     }
 
     let sizeHtml = '';
@@ -447,25 +447,25 @@ function quickView(id) {
             if (soldSizes.includes(s)) return `<span style="text-decoration:line-through; color:#aaa; margin-right:8px;">${s}</span>`;
             else return `<span style="font-weight:bold; color:var(--text-color); margin-right:8px; border:1px solid #ddd; padding:2px 6px; border-radius:4px;">${s}</span>`;
         }).join('');
-        sizeHtml = `<div style="margin:15px 0;"><strong>Tallas:</strong> ${badges}</div>`;
+        sizeHtml = `<div style="margin:15px 0; text-align: center;"><strong>Tallas:</strong> ${badges}</div>`;
     }
 
     const content = `
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; align-items: start;">
-            <div>${imagesHtml}</div>
-            <div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; align-items: start;">
+            ${imagesHtml}
+            <div style="display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%;">
                 <div class="product-category" style="margin-bottom: 0.5rem;">${getCategoryName(product.category)}</div>
                 <h2 style="margin-bottom: 1rem;">${product.name}</h2>
                 ${sizeHtml}
-                <div class="product-rating" style="margin-bottom: 1rem;">
+                <div class="product-rating" style="margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center; justify-content: center;">
                     <span class="stars">${'<i class="fas fa-star"></i>'.repeat(Math.floor(product.rating || 5))}</span>
                     <span>${product.rating || 5} (${product.reviews || 0} reseñas)</span>
                 </div>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.8;">${product.desc || ''}</p>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.8; text-align: center;">${product.desc || ''}</p>
                 <div style="margin-bottom: 2rem;">
                     <div style="font-size: 2rem; font-weight: 900; color: var(--primary);">$${product.price.toFixed(2)}</div>
                 </div>
-                <button onclick="addToCart(${product.id}); closeQuickView();" style="width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
+                <button onclick="addToCart(${product.id}); closeQuickView();" style="width: 100%; max-width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: block; margin: 0 auto;">
                     <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i> Agregar al Carrito
                 </button>
             </div>
