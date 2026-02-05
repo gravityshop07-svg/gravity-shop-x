@@ -150,9 +150,21 @@
             background: rgba(255,255,255,0.1);
         }
 
-        .nav-item:hover .dropdown-menu {
-            display: block;
-            animation: fadeIn 0.3s ease;
+        /* Hover en PC - mostrar submenú */
+        @media (min-width: 993px) {
+            .nav-item:hover .dropdown-menu {
+                display: block !important;
+                animation: fadeIn 0.3s ease;
+            }
+            
+            /* Asegurar que el dropdown no tenga estilos inline en PC */
+            .dropdown-menu {
+                display: none !important;
+            }
+            
+            .nav-item:hover .dropdown-menu {
+                display: block !important;
+            }
         }
 
         @media (max-width: 992px) {
