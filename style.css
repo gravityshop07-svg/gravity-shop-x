@@ -1676,3 +1676,163 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         max-width: 100% !important;
     }
 }
+/* =========================================
+   CORRECCIÓN: IMAGEN DEL MODAL LLENA TODO EL ESPACIO
+   Pegar al final de style.css
+   ========================================= */
+
+/* PC - Imagen ocupa TODO el espacio del contenedor */
+.main-image-container {
+    width: 100% !important;
+    height: 400px !important;
+    background: #f8f9fa !important;
+    border-radius: 10px !important;
+    margin-bottom: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    border: 1px solid #eee !important;
+    padding: 0 !important;
+}
+
+.modal-main-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* CUBRE TODO EL ESPACIO */
+    border-radius: 10px !important;
+}
+
+/* Si quieres que NO se deforme (se recorta pero mantiene proporción) */
+/* Usa object-fit: cover */
+
+/* Si quieres que se vea completa (con espacios arriba/abajo si es necesario) */
+/* Cambia a: object-fit: contain */
+
+/* Miniaturas */
+.thumbnails-row {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin-top: 15px !important;
+    flex-wrap: wrap !important;
+}
+
+.thumb-img {
+    width: 70px !important;
+    height: 70px !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    border: 2px solid transparent !important;
+    opacity: 0.7 !important;
+    transition: all 0.2s ease !important;
+}
+
+.thumb-img:hover,
+.thumb-img.active {
+    border-color: #6366f1 !important;
+    opacity: 1 !important;
+    transform: scale(1.1) !important;
+}
+
+/* Modo oscuro */
+[data-theme="dark"] .main-image-container {
+    background: #2a2a35 !important;
+    border-color: #444 !important;
+}
+
+/* MÓVIL - Ajustes para pantalla pequeña */
+@media (max-width: 768px) {
+    .main-image-container {
+        height: 300px !important;
+    }
+    
+    .modal-main-img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+    
+    .thumb-img {
+        width: 60px !important;
+        height: 60px !important;
+    }
+}
+/* =========================================
+   ESTILOS PARA SELECTOR DE TALLAS
+   Pegar al final de style.css
+   ========================================= */
+
+.size-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.size-btn {
+    min-width: 50px;
+    padding: 10px 15px;
+    border: 2px solid #e5e7eb;
+    background: white;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #374151;
+}
+
+.size-btn:hover:not(:disabled) {
+    border-color: #6366f1;
+    background: #f3f4f6;
+    transform: translateY(-2px);
+}
+
+.size-btn.selected {
+    background: #6366f1 !important;
+    color: white !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+}
+
+.size-btn.size-sold-out {
+    background: #f3f4f6;
+    color: #9ca3af;
+    text-decoration: line-through;
+    cursor: not-allowed;
+    border-color: #e5e7eb;
+}
+
+/* Modo oscuro */
+body[data-theme="dark"] .size-btn {
+    background: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+body[data-theme="dark"] .size-btn:hover:not(:disabled) {
+    border-color: #6366f1;
+    background: #334155;
+}
+
+body[data-theme="dark"] .size-btn.selected {
+    background: #6366f1 !important;
+    color: white !important;
+}
+
+body[data-theme="dark"] .size-btn.size-sold-out {
+    background: #334155;
+    color: #64748b;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .size-btn {
+        min-width: 45px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
