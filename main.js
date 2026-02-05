@@ -543,28 +543,26 @@ document.querySelectorAll('.dropdown-menu a, .nav-link:not(.dropdown-toggle)').f
 
 // 3. Submenú Ropa (Lógica BLINDADA para Celular vs PC)
 function toggleSubmenu(event) {
-    // Si es pantalla grande (PC), salimos para no interferir con el Hover
+    // No interferir con PC
     if (window.innerWidth > 992) {
-        return; 
+        return;
     }
 
-    // Detenemos comportamientos del navegador (Solo en celular)
     if (event) {
         event.preventDefault();
         event.stopPropagation();
     }
-    
+
     const submenu = document.getElementById('ropaSubmenu');
-    const arrow = document.querySelector('.arrow-icon');
-    
-    // Lógica manual: Si está abierto ciérralo, si está cerrado ábrelo.
+    const arrow = event.currentTarget.querySelector('.arrow-icon');
+
     const estaAbierto = submenu.classList.contains('show');
 
     if (estaAbierto) {
         submenu.classList.remove('show');
-        if(arrow) arrow.style.transform = 'rotate(0deg)';
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
     } else {
         submenu.classList.add('show');
-        if(arrow) arrow.style.transform = 'rotate(180deg)';
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
     }
 }
