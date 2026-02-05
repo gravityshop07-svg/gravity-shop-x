@@ -6,7 +6,7 @@
 const SUPABASE_URL = 'https://hotcjinskytleluersrc.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhvdGNqaW5za3l0bGVsdWVyc3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMzI2NzIsImV4cCI6MjA4NTgwODY3Mn0.7Z7bOOzj10kwPjwELzGtgHoXPN2BvrAqqp1Fsln-bQI';
 
-// TU NÚMERO DE WHATSAPP (Formato internacional)
+// TU NÚMERO DE WHATSAPP
 const PHONE_NUMBER = '593983105527';
 
 // --- INICIALIZACIÓN SEGURA ---
@@ -36,16 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function initApp() {
-    // 1. Descargar productos de Supabase
     await fetchProductsFromDB();
-
-    // 2. Iniciar el resto (Carrito, Slider, Scroll, Tema)
     updateCartUI();
     initSlider();
     initScrollEffects();
     loadTheme();
     
-    // --- PRECIO MÁXIMO $50 ---
+    // Configuración de Precio Máximo $50
     const priceRange = document.getElementById('priceRange');
     const priceValue = document.getElementById('priceValue');
     if (priceRange) {
@@ -54,7 +51,7 @@ async function initApp() {
         if(priceValue) priceValue.textContent = '$50';
     }
 
-    // --- BOTÓN FLOTANTE AL NÚMERO REAL ---
+    // Botón Flotante WhatsApp
     const floatBtn = document.querySelector('.whatsapp-float');
     if (floatBtn) {
         floatBtn.href = `https://wa.me/${PHONE_NUMBER}`;
@@ -82,7 +79,7 @@ async function initApp() {
     if(sortSelect) sortSelect.addEventListener('change', renderProducts);
 }
 
-// NUEVA FUNCIÓN: CONEXIÓN A BASE DE DATOS
+// CONEXIÓN A BASE DE DATOS
 async function fetchProductsFromDB() {
     const container = document.getElementById('productsContainer');
     
@@ -99,8 +96,8 @@ async function fetchProductsFromDB() {
 
         if (error) throw error;
         
-        products = data || []; // Guardamos los datos reales
-        renderProducts(); // Pintamos los productos
+        products = data || [];
+        renderProducts();
 
     } catch (err) {
         console.error("Error cargando productos:", err);
@@ -115,7 +112,6 @@ function renderProducts() {
     const container = document.getElementById('productsContainer');
     if(!container) return;
 
-    // Verificación segura de elementos
     const priceRange = document.getElementById('priceRange');
     const maxPrice = priceRange ? parseInt(priceRange.value) : 50;
     
@@ -125,11 +121,9 @@ function renderProducts() {
     const sortSelect = document.getElementById('sortSelect');
     const sortType = sortSelect ? sortSelect.value : 'default';
     
-    // Filtrado
     let filtered = products.filter(p => {
         const pCategory = p.category || ''; 
         const matchCategory = currentFilter === 'all' || pCategory === currentFilter;
-        
         const safePrice = p.price || 0;
         const safeName = p.name || '';
         const safeDesc = p.desc || '';
@@ -140,14 +134,12 @@ function renderProducts() {
         return matchCategory && matchPrice && matchSearch;
     });
     
-    // Ordenamiento
     switch(sortType) {
         case 'price-low': filtered.sort((a, b) => (a.price || 0) - (b.price || 0)); break;
         case 'price-high': filtered.sort((a, b) => (b.price || 0) - (a.price || 0)); break;
         case 'rating': filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
     }
     
-    // Renderizar vacio
     if (filtered.length === 0) {
         container.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 4rem 0;">
@@ -166,7 +158,6 @@ function createProductCard(product) {
     const discount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
     const imageSrc = product.img || 'https://via.placeholder.com/300?text=Sin+Imagen';
     
-    // --- LÓGICA DE TALLAS ---
     let sizesHtml = '';
     if (product.sizes) {
         const allSizes = product.sizes.split(',').map(s => s.trim());
@@ -179,7 +170,6 @@ function createProductCard(product) {
                 return `<span style="font-weight:bold; color:var(--text-color); margin-right:6px; font-size:0.85rem; border:1px solid #ddd; padding:1px 5px; border-radius:4px;">${s}</span>`;
             }
         }).join('');
-        
         sizesHtml = `<div style="margin-top:8px; margin-bottom:5px;">${badges}</div>`;
     }
 
@@ -195,7 +185,6 @@ function createProductCard(product) {
                     </button>
                 </div>
             </div>
-            
             <div class="card-body">
                 <div class="product-category">${getCategoryName(product.category)}</div>
                 <h5 class="product-title">${product.name}</h5>
@@ -207,7 +196,6 @@ function createProductCard(product) {
                     </span>
                     <span>${product.rating || 5}</span>
                 </div>
-                
                 <div class="product-footer">
                     <div>
                         <span class="product-price">$${product.price.toFixed(2)}</span>
@@ -233,46 +221,27 @@ function getCategoryName(category) {
 }
 
 // ==========================================
-// FILTROS Y BÚSQUEDA
+// FILTROS, CARRITO Y WHATSAPP
 // ==========================================
 function filterByCategory(category) {
     currentFilter = category;
-    
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
     if (event && event.target && event.target.closest('.filter-btn')) {
         event.target.closest('.filter-btn').classList.add('active');
     }
-    
     renderProducts();
-    
     const prodSection = document.getElementById('productViewSection');
-    if(prodSection) {
-        prodSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    if(prodSection) prodSection.scrollIntoView({ behavior: 'smooth' });
 }
 
-function sortProducts() {
-    renderProducts();
-}
+function sortProducts() { renderProducts(); }
 
-// ==========================================
-// CARRITO DE COMPRAS
-// ==========================================
 function addToCart(id) {
     const product = products.find(p => p.id === id);
     if (!product) return;
-    
     const existingItem = cart.find(item => item.id === id);
-    
-    if (existingItem) {
-        existingItem.qty++;
-    } else {
-        cart.push({ ...product, qty: 1 });
-    }
-    
+    if (existingItem) existingItem.qty++;
+    else cart.push({ ...product, qty: 1 });
     updateCartUI();
     showNotification(`¡${product.name} agregado al carrito!`);
     toggleCart(true);
@@ -281,14 +250,9 @@ function addToCart(id) {
 function updateQty(id, change) {
     const item = cart.find(c => c.id === id);
     if (!item) return;
-    
     item.qty += change;
-    
-    if (item.qty <= 0) {
-        removeFromCart(id);
-    } else {
-        updateCartUI();
-    }
+    if (item.qty <= 0) removeFromCart(id);
+    else updateCartUI();
 }
 
 function removeFromCart(id) {
@@ -299,7 +263,6 @@ function removeFromCart(id) {
 
 function updateCartUI() {
     localStorage.setItem('cart', JSON.stringify(cart));
-    
     const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
     const badge = document.getElementById('cartBadge');
     if (badge) badge.textContent = totalQty;
@@ -308,24 +271,16 @@ function updateCartUI() {
     if (!container) return;
     
     if (cart.length === 0) {
-        container.innerHTML = `
-            <div class="empty-cart">
-                <i class="fas fa-shopping-basket"></i>
-                <p>Tu carrito está vacío</p>
-                <small>¡Agrega productos y comienza a comprar!</small>
-            </div>
-        `;
+        container.innerHTML = `<div class="empty-cart"><i class="fas fa-shopping-basket"></i><p>Tu carrito está vacío</p><small>¡Agrega productos y comienza a comprar!</small></div>`;
         const totalEl = document.getElementById('cartTotal');
         if (totalEl) totalEl.textContent = '$0.00';
         return;
     }
     
     let total = 0;
-    
     container.innerHTML = cart.map(item => {
         const itemTotal = item.price * item.qty;
         total += itemTotal;
-        
         return `
             <div class="cart-item">
                 <img src="${item.img}" class="cart-item-image" alt="${item.name}">
@@ -353,7 +308,6 @@ function updateCartUI() {
 function toggleCart(forceOpen = false) {
     const sidebar = document.querySelector('.cart-sidebar');
     const overlay = document.querySelector('.cart-overlay');
-    
     if (forceOpen || !sidebar.classList.contains('show')) {
         sidebar.classList.add('show');
         overlay.classList.add('show');
@@ -365,38 +319,25 @@ function toggleCart(forceOpen = false) {
     }
 }
 
-// ==========================================
-// CHECKOUT WHATSAPP
-// ==========================================
 function checkoutWhatsApp() {
     if (cart.length === 0) {
         showNotification('Tu carrito está vacío', 'error');
         return;
     }
-
     let total = 0;
-    let message = "✨ *NUEVO PEDIDO - GRAVITY SHOP X* ✨\n";
-    message += "─────────────────────\n";
-    message += "🛒 *RESUMEN DE COMPRA:*\n\n";
-    
+    let message = "✨ *NUEVO PEDIDO - GRAVITY SHOP X* ✨\n─────────────────────\n🛒 *RESUMEN DE COMPRA:*\n\n";
     cart.forEach(item => {
         const itemTotal = item.price * item.qty;
         total += itemTotal;
         const sizeInfo = item.sizes ? ` (Tallas: ${item.sizes})` : '';
         message += `▪️ *${item.name}*${sizeInfo}\n   ╰ ${item.qty} x $${item.price.toFixed(2)} = *$${itemTotal.toFixed(2)}*\n\n`;
     });
-    
-    message += "─────────────────────\n";
-    message += `💰 *TOTAL A PAGAR: $${total.toFixed(2)}*\n`;
-    message += "─────────────────────\n\n";
-    message += "👋 ¡Hola! Ya tengo listo mi pedido en el carrito. Quedo atento/a para finalizar la compra. 🚀";
-    
-    const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    message += `─────────────────────\n💰 *TOTAL A PAGAR: $${total.toFixed(2)}*\n─────────────────────\n\n👋 ¡Hola! Ya tengo listo mi pedido.`;
+    window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
 }
 
 // ==========================================
-// VISTA RÁPIDA (QUICK VIEW)
+// VISTA RÁPIDA (MODAL)
 // ==========================================
 window.changeModalImage = function(src, element) {
     const mainImg = document.getElementById('quickViewMainImg');
@@ -420,15 +361,7 @@ function quickView(id) {
         const thumbnails = product.images.map((img, index) => 
             `<img src="${img}" class="thumb-img ${index === 0 ? 'active' : ''}" onclick="changeModalImage('${img}', this)">`
         ).join('');
-
-        imagesHtml = `
-            <div class="gallery-container">
-                <div class="main-image-container">
-                    <img src="${product.images[0]}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}">
-                </div>
-                <div class="thumbnails-row">${thumbnails}</div>
-            </div>
-        `;
+        imagesHtml = `<div class="gallery-container"><div class="main-image-container"><img src="${product.images[0]}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}"></div><div class="thumbnails-row">${thumbnails}</div></div>`;
     } else {
         const imageSrc = product.img || 'https://via.placeholder.com/300?text=Sin+Imagen';
         imagesHtml = `<div class="main-image-container"><img src="${imageSrc}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}"></div>`;
@@ -482,7 +415,7 @@ function closeQuickView() {
 }
 
 // ==========================================
-// SLIDER, SCROLL & UTILS
+// UTILIDADES (Slider, Scroll, Tema)
 // ==========================================
 function initSlider() {
     const slides = document.querySelectorAll('.hero-slide');
@@ -535,22 +468,18 @@ function loadTheme() {
     const themeIcon = document.querySelector('.icon-btn i.fa-moon') || document.querySelector('.icon-btn i.fa-sun');
     if (savedTheme === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
-        if(themeIcon) {
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
-        }
+        if(themeIcon) { themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); }
     }
 }
 
-function toggleTheme() { } // Manejado por HTML
+function toggleTheme() { }
 
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
     const msgElement = document.getElementById('notifMsg');
     if (!notification || !msgElement) return;
     msgElement.textContent = message;
-    if (type === 'error') notification.style.borderLeftColor = 'var(--danger)';
-    else notification.style.borderLeftColor = 'var(--success)';
+    notification.style.borderLeftColor = type === 'error' ? 'var(--danger)' : 'var(--success)';
     notification.classList.add('show');
     setTimeout(() => { notification.classList.remove('show'); }, 3000);
 }
@@ -593,39 +522,36 @@ function debounce(func, wait) {
 }
 
 // ==========================================
-// FUNCIONES MÓVILES (LIMPIAS Y DEFINITIVAS)
+// FUNCIONES MÓVILES (Menú Hamburguesa)
 // ==========================================
 
-// 1. Abrir/Cerrar Menú Principal (SOLO UNA VEZ)
+// 1. Abrir/Cerrar Menú Principal
 function toggleMenu() {
     const menu = document.getElementById('navMenu');
     if (menu) menu.classList.toggle('active');
 }
 
-// 2. Control Inteligente de Clics en el Menú (CORREGIDO)
+// 2. Control Inteligente de Clics en el Menú (Cierra el menú si no es "Ropa")
 document.querySelectorAll('.nav-link, .dropdown-menu a').forEach(link => {
     link.addEventListener('click', (e) => {
         // TRUCO: Si el enlace que toqué está dentro del botón de "ROPA", NO cierres el menú
         if (link.closest('.link-split')) {
             return; // Se detiene aquí y no cierra nada
         }
-
-        // Si es cualquier otro enlace (Inicio, Tecnología, etc.), sí cierra el menú
+        // Si es cualquier otro enlace, sí cierra el menú
         const menu = document.getElementById('navMenu');
         if (menu) menu.classList.remove('active');
     });
 });
 
-// 3. Submenú Ropa (Acordeón)
-// CORRECCIÓN FINAL: INTERRUPTOR DE SUBMENÚ
-// CORRECCIÓN FINAL: INTERRUPTOR SOLO PARA CELULAR (BLINDADO)
+// 3. Submenú Ropa (Lógica BLINDADA para Celular vs PC)
 function toggleSubmenu(event) {
-    // 1. LÍNEA DE SEGURIDAD: Si es pantalla de PC (más de 992px), NO hagas nada.
+    // Si es pantalla grande (PC), salimos para no interferir con el Hover
     if (window.innerWidth > 992) {
-        return; // Aquí se detiene el código y no afecta a tu PC.
+        return; 
     }
 
-    // 2. Detenemos comportamientos del navegador (Solo en celular)
+    // Detenemos comportamientos del navegador (Solo en celular)
     if (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -634,7 +560,7 @@ function toggleSubmenu(event) {
     const submenu = document.getElementById('ropaSubmenu');
     const arrow = document.querySelector('.arrow-icon');
     
-    // 3. Lógica manual: Abrir o Cerrar
+    // Lógica manual: Si está abierto ciérralo, si está cerrado ábrelo.
     const estaAbierto = submenu.classList.contains('show');
 
     if (estaAbierto) {
