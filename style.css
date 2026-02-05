@@ -1197,7 +1197,21 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     .dropdown-menu.show { display: block !important; }
     
     /* IMPORTANTE: Desactivamos que se abra solo por pasar el dedo/mouse */
-    .nav-item:hover .dropdown-menu { display: none; }
+    /* Hover SOLO para PC */
+@media (hover: hover) and (pointer: fine) {
+    .dropdown-menu {
+        display: none;
+    }
+
+    .nav-item:hover .dropdown-menu {
+        display: block;
+    }
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
 
     .dropdown-menu a {
         padding: 12px 40px;
