@@ -617,20 +617,21 @@ document.querySelectorAll('.nav-link, .dropdown-menu a').forEach(link => {
 });
 
 // 3. Submenú Ropa (Acordeón)
+// CORRECCIÓN FINAL: INTERRUPTOR DE SUBMENÚ
 function toggleSubmenu(event) {
     if (event) {
-        event.preventDefault();
+        event.preventDefault(); 
         event.stopPropagation();
     }
     
     const submenu = document.getElementById('ropaSubmenu');
     const arrow = document.querySelector('.arrow-icon');
     
-    if (submenu.classList.contains('show')) {
-        submenu.classList.remove('show');
-        if(arrow) arrow.style.transform = 'rotate(0deg)';
-    } else {
-        submenu.classList.add('show');
-        if(arrow) arrow.style.transform = 'rotate(180deg)';
+    // 1. Usamos toggle: Si está abierto lo cierra, si está cerrado lo abre.
+    const estaAbierto = submenu.classList.toggle('show');
+
+    // 2. Rotamos la flecha según el estado
+    if (arrow) {
+        arrow.style.transform = estaAbierto ? 'rotate(180deg)' : 'rotate(0deg)';
     }
 }
