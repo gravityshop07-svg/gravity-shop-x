@@ -483,7 +483,14 @@ function quickView(id) {
                 </div>
                 <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.8; text-align: center;">${product.desc || ''}</p>
                 <div style="margin-bottom: 2rem;">
-                    <div style="font-size: 2rem; font-weight: 900; color: var(--primary);">$${product.price.toFixed(2)}</div>
+                    <div style="font-size: 2rem; font-weight: 900; color: var(--primary);">
+                        $${product.price.toFixed(2)}
+                    </div>
+                    ${product.oldPrice ? `
+                        <div style="font-size: 1.2rem; color: var(--text-muted); text-decoration: line-through; margin-top: 0.5rem;">
+                            $${product.oldPrice.toFixed(2)}
+                        </div>
+                    ` : ''}
                 </div>
                 <button onclick="addToCart(${product.id}); closeQuickView();" style="width: 100%; max-width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: block; margin: 0 auto;">
                     <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i> Agregar al Carrito
