@@ -444,15 +444,15 @@
                 </li>
                 
                 <li class="nav-item dropdown-wrapper">
-                    <div class="link-split" onclick="toggleSubmenu(event)" style="display: flex; justify-content: space-between; align-items: center; width: 100%; cursor: pointer;">
+                    <div class="link-split" style="display: flex; justify-content: space-between; align-items: center; width: 100%; cursor: pointer;">
                         <span class="nav-link" style="margin: 0;">ROPA</span>
                         <i class="fas fa-chevron-down arrow-icon"></i>
                     </div>
                     <ul class="dropdown-menu" id="ropaSubmenu">
-                        <li><a href="#" onclick="activateTab('camisa-hombre', 'Camisas')">Camisas Hombre</a></li>
-                        <li><a href="#" onclick="activateTab('buso-hombre', 'Busos Hombre')">Busos Hombre</a></li>
-                        <li><a href="#" onclick="activateTab('dividi-hombre', 'Dividis')">Dividis Hombre</a></li>
-                        <li><a href="#" onclick="activateTab('buso-mujer', 'Busos Mujer')">Busos Mujer</a></li>
+                        <li><a href="#" onclick="activateTab('camisa-hombre', 'Camisas'); return false;">Camisas Hombre</a></li>
+                        <li><a href="#" onclick="activateTab('buso-hombre', 'Busos Hombre'); return false;">Busos Hombre</a></li>
+                        <li><a href="#" onclick="activateTab('dividi-hombre', 'Dividis'); return false;">Dividis Hombre</a></li>
+                        <li><a href="#" onclick="activateTab('buso-mujer', 'Busos Mujer'); return false;">Busos Mujer</a></li>
                     </ul>
                 </li>
 
@@ -726,6 +726,27 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="main.js"></script>
+    
+    <script>
+        // DEBUG: Verificar que toggleSubmenu funcione
+        console.log('=== SCRIPT DE DEBUG CARGADO ===');
+        
+        window.addEventListener('load', function() {
+            const linkSplit = document.querySelector('.link-split');
+            const submenu = document.getElementById('ropaSubmenu');
+            
+            console.log('Link-split encontrado:', linkSplit);
+            console.log('Submenú encontrado:', submenu);
+            
+            if (linkSplit) {
+                linkSplit.addEventListener('click', function(e) {
+                    console.log('CLIC DETECTADO en link-split');
+                    console.log('Ancho de ventana:', window.innerWidth);
+                    console.log('Estado actual del submenú:', submenu?.classList.contains('show'));
+                });
+            }
+        });
+    </script>
 
     <script>
         // Esta función corre INMEDIATAMENTE al cargar
