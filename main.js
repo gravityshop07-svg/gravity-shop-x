@@ -568,3 +568,11 @@ function toggleSubmenu(event) {
     }
 }
 
+const ropaBtn = document.querySelector('.link-split');
+
+if (ropaBtn) {
+    ropaBtn.addEventListener('touchstart', (e) => {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+    }, { passive: false });
+}
