@@ -45,25 +45,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ropaButton && ropaSubmenu) {
         console.log('✅ Elementos encontrados - Inicializando submenú');
         
-        // Asegurar estado inicial
-        ropaSubmenu.style.display = 'none';
-        ropaSubmenu.classList.remove('show');
-        if (arrow) arrow.style.transform = 'rotate(0deg)';
+        // Asegurar estado inicial SOLO EN MÓVIL
+        if (window.innerWidth <= 992) {
+            ropaSubmenu.style.display = 'none';
+            ropaSubmenu.classList.remove('show');
+            if (arrow) arrow.style.transform = 'rotate(0deg)';
+        }
         
-        // Evento principal
+        // Evento principal - SOLO PARA MÓVIL
         ropaButton.addEventListener('click', function(e) {
+            // IMPORTANTE: Solo funcionar en móvil
+            if (window.innerWidth > 992) {
+                console.log('⚠️ Modo PC - hover activo, evento ignorado');
+                return; // En PC, dejar que el hover funcione
+            }
+            
             e.preventDefault();
             e.stopPropagation();
             e.stopImmediatePropagation();
             
-            console.log('🖱️ CLIC en botón ROPA detectado');
+            console.log('🖱️ CLIC en botón ROPA detectado (MÓVIL)');
             console.log('Estado actual:', submenuAbierto ? 'ABIERTO' : 'CERRADO');
-            
-            // Solo funcionar en móvil
-            if (window.innerWidth > 992) {
-                console.log('⚠️ Modo PC - evento ignorado');
-                return;
-            }
             
             // TOGGLE con flag
             if (submenuAbierto) {
@@ -83,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, true); // useCapture = true
         
-        // Cerrar submenú cuando seleccionas una opción
+        // Cerrar submenú cuando seleccionas una opción (SOLO MÓVIL)
         const subLinks = ropaSubmenu.querySelectorAll('a');
         subLinks.forEach(link => {
             link.addEventListener('click', function(e) {
@@ -100,6 +102,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+        
+        // Limpiar estilos inline cuando cambias de móvil a PC
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992) {
+                // Modo PC - quitar estilos inline para que funcione el hover
+                ropaSubmenu.style.display = '';
+                ropaSubmenu.classList.remove('show');
+                if (arrow) arrow.style.transform = '';
+                submenuAbierto = false;
+                console.log('🖥️ Cambiado a modo PC - Hover activado');
+            } else {
+                // Modo móvil - resetear
+                ropaSubmenu.style.display = 'none';
+                submenuAbierto = false;
+                console.log('📱 Cambiado a modo MÓVIL');
+            }
+        });
+        
     } else {
         console.error('❌ ERROR: No se encontraron los elementos del submenú');
         console.log('ropaButton:', ropaButton);
