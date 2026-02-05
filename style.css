@@ -1484,3 +1484,61 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         font-size: 1.2rem !important;
     }
 }
+
+/* =========================================
+   AJUSTE DE GRID DE PRODUCTOS - 4 POR FILA EN PC
+   Pegar al final del <style> en index.html
+   ========================================= */
+
+/* Redefinir el grid de productos para 4 columnas en PC */
+@media (min-width: 1200px) {
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 1.5rem !important;
+    }
+}
+
+/* Para pantallas medianas (tablets/laptops pequeños) - 3 productos */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1.5rem !important;
+    }
+}
+
+/* Para pantallas pequeñas (móviles) - 2 productos */
+@media (max-width: 767px) {
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+    }
+}
+
+/* Ajustar tamaño de las tarjetas para que se vean bien */
+@media (min-width: 1200px) {
+    .card-product {
+        max-width: 100% !important;
+    }
+    
+    .img-wrapper {
+        height: 250px !important;
+    }
+    
+    .product-title {
+        font-size: 1rem !important;
+    }
+    
+    .card-body {
+        padding: 1.2rem !important;
+    }
+}
+
+/* Opcional: Si quieres 5 productos en pantallas muy grandes */
+@media (min-width: 1600px) {
+    .products-grid {
+        grid-template-columns: repeat(5, 1fr) !important;
+    }
+}
