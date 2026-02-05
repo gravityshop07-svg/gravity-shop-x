@@ -148,7 +148,6 @@ body[data-theme="dark"] .footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 2rem;
 }
 
 .navbar-brand {
@@ -162,7 +161,6 @@ body[data-theme="dark"] .footer {
     display: flex;
     align-items: center;
     animation: glow 3s ease-in-out infinite;
-    order: 1;
 }
 
 @keyframes glow {
@@ -170,16 +168,10 @@ body[data-theme="dark"] .footer {
     50% { filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.8)); }
 }
 
-.nav-menu {
-    order: 2;
-}
-
 .nav-controls {
     display: flex;
     align-items: center;
     gap: 1rem;
-    order: 3;
-    margin-left: auto;
 }
 
 .search-box {
@@ -1459,31 +1451,8 @@ body[data-theme="dark"] .footer-bottom {
    CORRECCIONES MÓVILES (VERSIÓN HORIZONTAL)
    ========================================= */
 
-/* Ocultar botón hamburguesa en escritorio */
-.menu-toggle { 
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--text-dark);
-}
-
-body[data-theme="dark"] .menu-toggle {
-    color: var(--text-light);
-}
-
-/* Mostrar menú de navegación en escritorio */
-@media (min-width: 993px) {
-    .nav-menu {
-        display: flex !important;
-        gap: 30px;
-        align-items: center;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-}
+/* Ocultar botón en PC */
+.menu-toggle { display: none; }
 
 @media (max-width: 992px) {
     
@@ -1496,16 +1465,15 @@ body[data-theme="dark"] .menu-toggle {
         padding: 10px 15px;
     }
 
-    /* Orden de elementos en móvil */
+    /* Orden de elementos */
     .menu-toggle { 
-        display: block !important;
+        display: block; 
         font-size: 1.6rem; 
         background: none; 
         border: none;
-        color: inherit;
+        color: var(--text-color);
         order: 1; /* PRIMERO (IZQUIERDA) */
         margin-right: 10px;
-        cursor: pointer;
     }
 
     .navbar-brand { 
@@ -1518,20 +1486,12 @@ body[data-theme="dark"] .menu-toggle {
     .nav-controls { 
         order: 3; /* TERCERO (DERECHA) */
         gap: 5px;
-        margin-left: 0;
     }
 
     /* Ajuste buscador en celular */
-    .search-box { 
-        padding: 0.4rem 1rem;
-    }
-    
-    .search-box input { 
-        width: 80px; 
-        font-size: 0.85rem;
-    } 
+    .search-box input { width: 80px; padding: 5px; } 
 
-    /* 2. MENÚ DESPLEGABLE (COMPLETO Y VISIBLE) */
+    /* 2. MENÚ DESPLEGABLE (FONDO NEGRO) */
     .nav-menu {
         display: none;
         width: 100%;
@@ -1542,123 +1502,40 @@ body[data-theme="dark"] .menu-toggle {
         padding: 15px;
         border-radius: 8px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        max-height: 80vh;
-        overflow-y: auto;
     }
     
-    body[data-theme="dark"] .nav-menu {
-        background-color: #1a1a1a;
-    }
-    
-    .nav-menu.active { 
-        display: flex !important;
-    }
-
-    .nav-item {
-        width: 100%;
-        text-align: left;
-    }
+    .nav-menu.active { display: flex; }
 
     .nav-link { 
         color: white !important; /* TEXTO BLANCO */
         font-size: 1.1rem;
-        padding: 12px 15px;
+        padding: 12px 0;
         border-bottom: 1px solid #333;
         display: block;
         width: 100%;
     }
 
-    /* Submenú Ropa - Mejorado para móvil */
-    .dropdown-wrapper {
-        width: 100%;
-    }
-    
-    .link-split {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center;
-        width: 100% !important;
-        padding: 12px 15px;
-        cursor: pointer;
-    }
-    
-    .link-split .nav-link {
-        border: none;
-        padding: 0;
-    }
-    
-    .arrow-icon {
-        color: white !important;
-        transition: transform 0.3s ease;
-    }
-    
+    /* Submenú Ropa */
     .dropdown-menu {
         display: none;
         background: #222; 
-        padding: 10px 0;
         padding-left: 20px;
         border-left: 3px solid var(--primary);
-        margin: 5px 0;
-        width: 100%;
+        margin-top: 5px;
     }
-    
-    .dropdown-menu.show { 
-        display: block !important;
-    }
-    
-    .dropdown-menu li {
-        list-style: none;
-    }
-    
-    .dropdown-menu li a { 
-        color: #ccc !important; 
-        padding: 10px 15px; 
-        display: block;
-        border: none;
-        font-size: 1rem;
-    }
-    
-    .dropdown-menu li a:hover {
-        color: var(--primary) !important;
-        background: rgba(255,255,255,0.05);
-    }
+    .dropdown-menu.show { display: block; }
+    .dropdown-menu li a { color: #ccc !important; padding: 10px 0; display: block; }
 
-    /* 3. ARREGLO PORTADA (PALOMA CENTRADA Y COMPLETA) */
-    .hero-slider { 
-        height: 70vh; 
-        min-height: 400px;
+    /* 3. ARREGLO PORTADA (PALOMA CENTRADA) */
+    .hero-slider { height: 55vh; min-height: 350px; }
+    .hero-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* ESTO ES LO QUE ARREGLA LA IMAGEN: */
+        object-position: center center !important; 
     }
-    
-    .hero-slide {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .hero-content { 
-        width: 95%; 
-        max-width: 100%;
-        padding: 1rem;
-        text-align: center;
-    }
-    
-    .hero-text h1 {
-        font-size: 2rem !important;
-    }
-    
-    .hero-text p {
-        font-size: 1rem !important;
-    }
-    
-    .hero-logo-large {
-        max-width: 200px !important;
-        width: 80% !important;
-    }
-    
-    .cta-btn {
-        padding: 0.8rem 1.5rem !important;
-        font-size: 0.9rem !important;
-    }
+    .hero-content { width: 90%; left: 50%; transform: translateX(-50%); bottom: 15%; text-align: center; }
 
     /* 4. ARREGLO CARRITO (BOTÓN VISIBLE) */
     .cart-sidebar {
