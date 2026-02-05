@@ -417,6 +417,81 @@
             color: inherit;
             cursor: pointer;
         }
+
+        /* =========================================
+           CORRECCIÓN MODAL VISTA RÁPIDA EN MÓVIL
+           ========================================= */
+        @media (max-width: 768px) {
+            /* Contenedor del modal centrado */
+            #quickViewContent {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
+                width: 100% !important;
+            }
+
+            /* Galería de imágenes centrada */
+            .gallery-container {
+                width: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+
+            /* Contenedor de imagen principal centrado */
+            .main-image-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                margin: 0 auto !important;
+                padding: 0 !important;
+            }
+
+            /* Imagen centrada y responsiva */
+            .modal-main-img {
+                max-width: 100% !important;
+                height: auto !important;
+                display: block !important;
+                margin: 0 auto !important;
+            }
+
+            /* Miniaturas centradas */
+            .thumbnails-row {
+                display: flex !important;
+                justify-content: center !important;
+                width: 100% !important;
+                margin: 10px auto !important;
+            }
+
+            /* Contenido de texto centrado */
+            #quickViewContent > div {
+                width: 100% !important;
+                max-width: 100% !important;
+                text-align: center !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+
+            /* Botón centrado y full width */
+            #quickViewContent button {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+                display: block !important;
+            }
+
+            /* Grid del modal en una columna centrada */
+            #quickViewContent > div[style*="grid"] {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 1rem !important;
+            }
+        }
     </style>
 </head>
 <body>
