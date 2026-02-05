@@ -1691,3 +1691,30 @@ body[data-theme="dark"] .menu-toggle {
 #searchInput:focus {
     width: 220px;
 }
+/* =========================================
+   CORRECCIÓN URGENTE: FOOTER DEL CARRITO EN MÓVIL
+   ========================================= */
+@media (max-width: 768px) {
+    /* 1. Convertimos la barra lateral en una caja flexible vertical */
+    .cart-sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100vh !important; /* Asegura altura completa */
+    }
+
+    /* 2. El cuerpo del carrito (donde van los productos) ocupa todo el espacio disponible */
+    .cart-body {
+        flex: 1 !important; /* Esto empuja el footer hacia abajo */
+        overflow-y: auto !important; /* Permite scroll si hay muchos productos */
+        height: auto !important;
+    }
+
+    /* 3. EL ARREGLO: Quitamos el 'fixed' para que no flote en la pantalla */
+    .cart-footer {
+        position: relative !important; /* Se mueve CON el carrito, no con la pantalla */
+        bottom: 0 !important;
+        width: 100% !important;
+        z-index: 1 !important; /* Ya no necesita ser mil */
+        box-shadow: 0 -4px 10px rgba(0,0,0,0.1); /* Sombra suave arriba */
+    }
+}
