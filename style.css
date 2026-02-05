@@ -1253,3 +1253,53 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         padding-bottom: 80px !important; 
     }
 }
+/* =========================================
+   ARREGLO: PORTADA (SLIDER) PARA MÓVIL
+   ========================================= */
+@media (max-width: 768px) {
+    
+    /* 1. Reducimos la altura del Slider */
+    .hero-slider {
+        height: 50vh !important; /* Ocupa solo la mitad de la pantalla del cel */
+        min-height: 350px !important; /* Ni muy chico, ni muy grande */
+    }
+
+    /* 2. Ajustamos la imagen de fondo */
+    .hero-slide {
+        /* "cover" llena el espacio, "center" busca el centro de la imagen */
+        background-size: cover !important; 
+        background-position: center center !important;
+    }
+
+    /* 3. Ajustamos el texto y el logo para que quepan */
+    .hero-content {
+        padding: 10px !important; /* Menos relleno a los lados */
+        width: 100% !important;
+    }
+
+    .hero-text h1 {
+        font-size: 1.8rem !important; /* Título más pequeño (Smartwatch, etc) */
+        margin-bottom: 0.5rem !important;
+    }
+
+    .hero-text p {
+        font-size: 0.9rem !important; /* Texto descriptivo más pequeño */
+        margin-bottom: 1rem !important;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Limita a 2 líneas de texto si es muy largo */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* El logo de la paloma en la portada */
+    .hero-logo-large {
+        max-width: 120px !important; /* Más pequeñito */
+        margin-bottom: 0.5rem !important;
+    }
+
+    /* Botón de la portada un poco más compacto */
+    .cta-btn {
+        padding: 0.6rem 1.2rem !important;
+        font-size: 0.9rem !important;
+    }
+}
