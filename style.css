@@ -1542,3 +1542,114 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         grid-template-columns: repeat(5, 1fr) !important;
     }
 }
+/* =========================================
+   AJUSTAR TAMAÑO DEL MODAL (OJITO) - MÁS COMPACTO
+   Pegar al final del <style> en index.html
+   ========================================= */
+
+/* Modal más pequeño y compacto en PC */
+.quick-view-modal {
+    max-width: 700px !important; /* Antes era 800px */
+    max-height: 85vh !important; /* Limita la altura */
+    padding: 1.5rem !important; /* Menos padding */
+    overflow-y: auto !important;
+}
+
+/* Ajustar el contenido interno para que no sea tan alto */
+#quickViewContent {
+    max-height: 75vh !important;
+    overflow-y: auto !important;
+}
+
+/* Grid más compacto - imagen al lado del texto */
+#quickViewContent > div[style*="grid"] {
+    grid-template-columns: 1fr 1fr !important; /* 50% imagen, 50% texto */
+    gap: 1.5rem !important;
+    align-items: start !important;
+}
+
+/* Imagen principal más pequeña */
+.main-image-container {
+    height: 300px !important; /* Antes era más grande */
+    max-height: 300px !important;
+}
+
+.modal-main-img {
+    max-height: 280px !important;
+}
+
+/* Miniaturas más pequeñas */
+.thumbnails-row {
+    gap: 6px !important;
+}
+
+.thumb-img {
+    width: 50px !important;
+    height: 50px !important;
+}
+
+/* Textos más compactos */
+#quickViewContent h2 {
+    font-size: 1.5rem !important; /* Título más pequeño */
+    margin-bottom: 0.8rem !important;
+}
+
+#quickViewContent p {
+    font-size: 0.9rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1rem !important;
+}
+
+/* Precio más compacto */
+#quickViewContent > div > div > div[style*="font-size: 2rem"] {
+    font-size: 1.8rem !important;
+}
+
+/* Botón más pequeño */
+#quickViewContent button {
+    padding: 0.8rem 1.5rem !important;
+    font-size: 1rem !important;
+}
+
+/* Rating más pequeño */
+.product-rating {
+    font-size: 0.85rem !important;
+    margin-bottom: 0.8rem !important;
+}
+
+/* Para tablets y móviles - que siga siendo vertical pero compacto */
+@media (max-width: 992px) {
+    .quick-view-modal {
+        max-width: 90% !important;
+        max-height: 90vh !important;
+        padding: 1rem !important;
+    }
+    
+    #quickViewContent > div[style*="grid"] {
+        grid-template-columns: 1fr !important; /* Una columna en móvil */
+    }
+    
+    .main-image-container {
+        height: 250px !important;
+    }
+    
+    .modal-main-img {
+        max-height: 230px !important;
+    }
+}
+
+/* Para móviles pequeños */
+@media (max-width: 576px) {
+    .quick-view-modal {
+        max-width: 95% !important;
+        padding: 0.8rem !important;
+    }
+    
+    .main-image-container {
+        height: 200px !important;
+    }
+    
+    #quickViewContent h2 {
+        font-size: 1.2rem !important;
+    }
+}
