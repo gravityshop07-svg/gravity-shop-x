@@ -1327,3 +1327,51 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     right: 10px !important;      /* Posición fija a la derecha */
     top: 10px !important;        /* Posición fija arriba */
 }
+/* =========================================
+   BROCHE DE ORO: ARREGLO MODAL (OJITO) EN MÓVIL
+   ========================================= */
+@media (max-width: 768px) {
+    
+    /* 1. Ajuste del Cuadro General (La ventana blanca) */
+    .quick-view-modal {
+        width: 90% !important; /* Un poco más de margen a los lados */
+        max-height: 85vh !important; /* Que no sea más alto que la pantalla */
+        padding: 15px !important; /* Menos relleno para ganar espacio */
+        overflow-y: auto !important; /* Si el contenido es largo, que haga scroll DENTRO del cuadro */
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important; /* Centrado perfecto matemático */
+    }
+
+    /* 2. Forzar que la imagen y el texto estén uno sobre otro (Columna) */
+    #quickViewContent > div {
+        grid-template-columns: 1fr !important; /* Una sola columna */
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 15px !important;
+        text-align: center !important; /* Centra el texto del título y precio */
+    }
+
+    /* 3. ARREGLO DE LA IMAGEN (Lo más importante) */
+    .main-image-container {
+        height: 250px !important; /* Reducimos la altura para que no se vea estirada */
+        width: 100% !important;
+        margin: 0 auto !important; /* Esto centra el cuadro de la imagen */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: #fff !important; /* Fondo blanco limpio */
+    }
+
+    .modal-main-img {
+        max-height: 100% !important;
+        max-width: 100% !important;
+        object-fit: contain !important; /* CLAVE: La imagen se ajusta sin estirarse */
+    }
+
+    /* 4. Centrar los botones y selectores */
+    .product-actions-modal, 
+    .thumbnails-row {
+        justify-content: center !important;
+    }
+}
