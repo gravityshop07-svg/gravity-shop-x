@@ -187,6 +187,18 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.2) !important;
         }
 
+        /* CORRECCIÓN FLECHA MÓVIL */
+        .arrow-icon {
+            color: #333;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+            font-size: 0.8rem;
+        }
+
+        body[data-theme="dark"] .arrow-icon {
+            color: #fff;
+        }
+
         /* Hero Slider */
         .hero-slide {
             position: absolute;
@@ -432,9 +444,9 @@
                 </li>
                 
                 <li class="nav-item dropdown-wrapper">
-                    <div class="link-split" onclick="toggleSubmenu(event)" style="display: flex; justify-content: space-between; width: 100%;">
-                        <span class="nav-link">ROPA</span>
-                        <i class="fas fa-chevron-down arrow-icon" style="color: white;"></i>
+                    <div class="link-split" onclick="toggleSubmenu(event)" style="display: flex; justify-content: space-between; align-items: center; width: 100%; cursor: pointer;">
+                        <span class="nav-link" style="margin: 0;">ROPA</span>
+                        <i class="fas fa-chevron-down arrow-icon"></i>
                     </div>
                     <ul class="dropdown-menu" id="ropaSubmenu">
                         <li><a href="#" onclick="activateTab('camisa-hombre', 'Camisas')">Camisas Hombre</a></li>
