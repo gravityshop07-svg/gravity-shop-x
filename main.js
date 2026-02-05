@@ -753,8 +753,15 @@ function toggleMenu() {
 }
 
 // Cerrar menú al tocar un enlace
+// Cerrar menú al tocar un enlace (CORREGIDO)
 document.querySelectorAll('.nav-link, .dropdown-menu a').forEach(link => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', (e) => {
+        // TRUCO: Si el enlace que toqué está dentro del botón de "ROPA", NO cierres el menú
+        if (link.closest('.link-split')) {
+            return; // Se detiene aquí y no cierra nada
+        }
+
+        // Si es cualquier otro enlace (Inicio, Tecnología, etc.), sí cierra el menú
         const menu = document.getElementById('navMenu');
         if (menu) menu.classList.remove('active');
     });
