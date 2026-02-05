@@ -1318,3 +1318,12 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         display: block !important;
     }
 }
+/* =========================================
+   ARREGLO FINAL: OJITO SIEMPRE VISIBLE (SIN Tocar el Zoom)
+   ========================================= */
+.product-actions {
+    opacity: 1 !important;       /* Siempre visible (PC y Celular) */
+    transform: none !important;  /* Quieto en su lugar, sin deslizarse */
+    right: 10px !important;      /* Posición fija a la derecha */
+    top: 10px !important;        /* Posición fija arriba */
+}
