@@ -12,6 +12,12 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
+        /* Logo: Evita que se haga gigante */
+        .navbar-brand img {
+            height: 50px;
+            width: auto;
+            max-width: 60px;
+        }
         /* =========================================
            CORRECCIÓN DEFINITIVA DEL MODO OSCURO
            ========================================= */
@@ -422,6 +428,22 @@
                 <span class="brand-text">GRAVITY SHOP X</span>
             </a>
 
+            <div class="nav-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar...">
+                </div>
+                
+                <button class="icon-btn" onclick="toggleThemeManual()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <button class="icon-btn position-relative" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge-count" id="cartBadge">0</span>
+                </button>
+            </div>
+
             <button class="menu-toggle" onclick="toggleMenu()">
                 <i class="fas fa-bars"></i>
             </button>
@@ -448,22 +470,6 @@
                 <li class="nav-item"><a href="#" class="nav-link" onclick="activateTab('accesorios', 'ACCESORIOS')">ACCESORIOS</a></li>
                 <li class="nav-item"><a href="#" class="nav-link" onclick="openInfoModal('modalUbicacion')">UBICACION</a></li>
             </ul>
-
-            <div class="nav-controls">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Buscar...">
-                </div>
-                
-                <button class="icon-btn" id="themeToggleManual" onclick="toggleThemeManual()">
-                    <i class="fas fa-moon"></i>
-                </button>
-                
-                <button class="icon-btn position-relative" onclick="toggleCart()">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="badge-count" id="cartBadge">0</span>
-                </button>
-            </div>
         </div>
     </nav>
     <div id="homeSection">
