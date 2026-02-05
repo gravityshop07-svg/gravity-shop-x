@@ -618,20 +618,30 @@ document.querySelectorAll('.nav-link, .dropdown-menu a').forEach(link => {
 
 // 3. Submenú Ropa (Acordeón)
 // CORRECCIÓN FINAL: INTERRUPTOR DE SUBMENÚ
+// CORRECCIÓN FINAL: INTERRUPTOR SOLO PARA CELULAR (BLINDADO)
 function toggleSubmenu(event) {
+    // 1. LÍNEA DE SEGURIDAD: Si es pantalla de PC (más de 992px), NO hagas nada.
+    if (window.innerWidth > 992) {
+        return; // Aquí se detiene el código y no afecta a tu PC.
+    }
+
+    // 2. Detenemos comportamientos del navegador (Solo en celular)
     if (event) {
-        event.preventDefault(); 
+        event.preventDefault();
         event.stopPropagation();
     }
     
     const submenu = document.getElementById('ropaSubmenu');
     const arrow = document.querySelector('.arrow-icon');
     
-    // 1. Usamos toggle: Si está abierto lo cierra, si está cerrado lo abre.
-    const estaAbierto = submenu.classList.toggle('show');
+    // 3. Lógica manual: Abrir o Cerrar
+    const estaAbierto = submenu.classList.contains('show');
 
-    // 2. Rotamos la flecha según el estado
-    if (arrow) {
-        arrow.style.transform = estaAbierto ? 'rotate(180deg)' : 'rotate(0deg)';
+    if (estaAbierto) {
+        submenu.classList.remove('show');
+        if(arrow) arrow.style.transform = 'rotate(0deg)';
+    } else {
+        submenu.classList.add('show');
+        if(arrow) arrow.style.transform = 'rotate(180deg)';
     }
 }
