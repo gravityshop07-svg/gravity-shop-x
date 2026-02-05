@@ -522,7 +522,7 @@ function debounce(func, wait) {
 }
 
 // ==========================================
-// FUNCIONES MÓVILES (Menú Hamburguesa)
+// FUNCIONES MÓVILES (Menú Hamburguesa) - CORREGIDO
 // ==========================================
 
 // 1. Abrir/Cerrar Menú Principal
@@ -531,48 +531,65 @@ function toggleMenu() {
     if (menu) menu.classList.toggle('active');
 }
 
-// 2. Control Inteligente de Clics en el Menú (Cierra el menú si no es "Ropa")
-document.querySelectorAll('.dropdown-menu a, .nav-link:not(.dropdown-toggle)').forEach(link => {
-    link.addEventListener('click', () => {
-        const menu = document.getElementById('navMenu');
-        if (menu) menu.classList.remove('active');
+// 2. Control Inteligente de Clics en el Menú (Cierra el menú SOLO en enlaces normales)
+document.querySelectorAll('.nav-link:not(.link-split *)').forEach(link => {
+    link.addEventListener('click', (e) => {
+        // Solo cerrar si NO es parte del dropdown de ropa
+        if (!e.target.closest('.dropdown-wrapper')) {
+            const menu = document.getElementById('navMenu');
+            if (menu && window.innerWidth <= 992) {
+                menu.classList.remove('active');
+            }
+        }
     });
 });
 
+// Cerrar menú cuando se hace clic en un enlace del submenú
+document.querySelectorAll('.dropdown-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+        const menu = document.getElementById('navMenu');
+        if (menu && window.innerWidth <= 992) {
+            menu.classList.remove('active');
+        }
+    });
+});
 
-
-// 3. Submenú Ropa (Lógica BLINDADA para Celular vs PC)
+// 3. Submenú Ropa (ACORDEÓN - Abrir/Cerrar con cada clic)
 function toggleSubmenu(event) {
-    // ⛔ DETIENE TODOS los listeners de clic (CLAVE)
+    // IMPORTANTE: Detener TODA propagación del evento
+    event.preventDefault();
+    event.stopPropagation();
     event.stopImmediatePropagation();
-
-    // No interferir con PC
+    
+    // En PC, no hacer nada (funciona por hover)
     if (window.innerWidth > 992) {
         return;
     }
 
-    event.preventDefault();
-    event.stopPropagation();
-
     const submenu = document.getElementById('ropaSubmenu');
     const arrow = event.currentTarget.querySelector('.arrow-icon');
 
+    if (!submenu) {
+        console.log('No se encontró el submenú ropaSubmenu');
+        return;
+    }
+
+    // Alternar entre mostrar/ocultar
     const estaAbierto = submenu.classList.contains('show');
 
     if (estaAbierto) {
+        // CERRAR submenú (contraer)
         submenu.classList.remove('show');
-        if (arrow) arrow.style.transform = 'rotate(0deg)';
+        if (arrow) {
+            arrow.style.transform = 'rotate(0deg)';
+            arrow.style.transition = 'transform 0.3s ease';
+        }
     } else {
+        // ABRIR submenú (expandir)
         submenu.classList.add('show');
-        if (arrow) arrow.style.transform = 'rotate(180deg)';
+        if (arrow) {
+            arrow.style.transform = 'rotate(180deg)';
+            arrow.style.transition = 'transform 0.3s ease';
+        }
     }
-}
-
-const ropaBtn = document.querySelector('.link-split');
-
-if (ropaBtn) {
-    ropaBtn.addEventListener('touchstart', (e) => {
-        e.stopImmediatePropagation();
-        e.preventDefault();
-    }, { passive: false });
 }
