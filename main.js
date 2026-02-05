@@ -532,17 +532,14 @@ function toggleMenu() {
 }
 
 // 2. Control Inteligente de Clics en el Menú (Cierra el menú si no es "Ropa")
-document.querySelectorAll('.nav-link, .dropdown-menu a').forEach(link => {
-    link.addEventListener('click', (e) => {
-        // TRUCO: Si el enlace que toqué está dentro del botón de "ROPA", NO cierres el menú
-        if (link.closest('.link-split')) {
-            return; // Se detiene aquí y no cierra nada
-        }
-        // Si es cualquier otro enlace, sí cierra el menú
+document.querySelectorAll('.dropdown-menu a, .nav-link:not(.dropdown-toggle)').forEach(link => {
+    link.addEventListener('click', () => {
         const menu = document.getElementById('navMenu');
         if (menu) menu.classList.remove('active');
     });
 });
+
+
 
 // 3. Submenú Ropa (Lógica BLINDADA para Celular vs PC)
 function toggleSubmenu(event) {
