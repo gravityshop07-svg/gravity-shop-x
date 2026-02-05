@@ -1303,3 +1303,18 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         font-size: 0.9rem !important;
     }
 }
+/* =========================================
+   ARREGLO FINAL: ACORDEÓN DE ROPA (Mata el Hover Fantasma)
+   ========================================= */
+@media (max-width: 992px) {
+    /* 1. Desactivamos que el menú se abra solo al "tocar/hover" */
+    .nav-item:hover .dropdown-menu {
+        display: none;
+    }
+
+    /* 2. Obligamos a que SOLO se abra si tiene la clase .show (la del clic) */
+    /* El !important es vital aquí para ganarle al hover */
+    .dropdown-menu.show {
+        display: block !important;
+    }
+}
