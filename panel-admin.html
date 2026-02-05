@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Gestión - Gravity Shop</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; padding: 20px; }
+        
+        /* Layout */
+        .main-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; align-items: start; }
+        
+        /* Sidebar */
+        .sidebar { background: white; padding: 15px; border-radius: 12px; height: 85vh; overflow-y: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .product-item { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
+        .product-item:hover { background: #f9fafb; }
+        .product-item img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; }
+        .product-info h4 { margin: 0; font-size: 0.9rem; }
+        .product-info p { margin: 0; font-size: 0.8rem; color: #666; }
+        .btn-new { width: 100%; padding: 10px; background: #10b981; color: white; border: none; border-radius: 6px; margin-bottom: 15px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-new:hover { background: #059669; }
+
+        /* Formulario */
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #4f46e5; margin-bottom: 1.5rem; text-align: center; }
+        
+        .form-section { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #4b5563; }
+        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; margin-bottom: 10px; font-family: inherit; }
+        input:focus, select:focus, textarea:focus { outline: 2px solid #6366f1; border-color: transparent; }
+
+        .row { display: flex; gap: 15px; }
+        .col { flex: 1; }
+
+        /* Tallas (Diseño Recto y Ordenado) */
+        .sizes-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; }
+        .size-card { background: #ffffff; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s; }
+        .size-card:hover { border-color: #6366f1; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .size-title { font-weight: 800; font-size: 1.1rem; color: #1f2937; margin-bottom: 10px; display: block; border-bottom: 1px solid #f3f4f6; padding-bottom: 5px; }
+        .radio-group { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; padding-left: 5px; }
+        .radio-label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; width: 100%; color: #6b7280; }
+        .radio-label input { margin: 0; width: 16px; height: 16px; cursor: pointer; accent-color: #6366f1; }
+        .radio-label.opt-yes { color: #059669; font-weight: 600; }
+        .radio-label.opt-yes input { accent-color: #059669; }
+        .radio-label.opt-sold { color: #dc2626; font-weight: 600; }
+        .radio-label.opt-sold input { accent-color: #dc2626; }
+
+        /* Botones */
+        #btnGuardar { width: 100%; padding: 1rem; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        #btnGuardar:hover { background: #4338ca; }
+        #btnGuardar.mode-edit { background: #f59e0b; } 
+        #btnGuardar.mode-edit:hover { background: #d97706; }
+        
+        .preview-main { max-width: 100px; display: none; margin-top: 10px; border-radius: 6px; border: 1px solid #ddd; }
+        .status { margin-top: 10px; text-align: center; font-weight: bold; padding: 10px; border-radius: 6px; display: none; }
+
+        @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } .sidebar { height: auto; max-height: 300px; } }
+    </style>
+</head>
+<body>
+
+<div class="main-layout">
+    
+    <div class="sidebar">
+        <button class="btn-new" onclick="limpiarFormulario()">+ CREAR NUEVO</button>
+        <h3 style="margin-top:0; font-size:0.9rem; color:#888;">TUS CAMISAS:</h3>
+        <div id="productList">
+            <p style="text-align:center; padding:20px;">Cargando...</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h1 id="formTitle">Crear Producto</h1>
+        <input type="hidden" id="editId"> 
+
+        <div class="form-section">
+            <label>Nombre del Producto</label>
+            <input type="text" id="name" placeholder="Ej: Camisa Manga Larga">
+
+            <label>Categoría</label>
+            <select id="category">
+                <option value="camisa-hombre">Camisa Hombre</option>
+                <option value="buso-hombre">Buso Hombre</option>
+                <option value="dividi-hombre">Dividi Hombre</option>
+                <option value="buso-mujer">Buso Mujer</option>
+                <option value="tecnologia">Tecnología</option>
+                <option value="accesorios">Accesorios</option>
+            </select>
+        </div>
+
+        <div class="form-section">
+            <label>Disponibilidad de Tallas</label>
+            <div class="sizes-row" id="sizesContainer"></div>
+        </div>
+
+        <div class="form-section">
+            <div class="row">
+                <div class="col">
+                    <label>Precio ($)</label>
+                    <input type="number" id="price" step="0.01" placeholder="0.00">
+                </div>
+                <div class="col">
+                    <label>Precio Anterior</label>
+                    <input type="number" id="oldPrice" step="0.01" placeholder="Opcional">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col">
+                    <label>¿Es Nuevo?</label>
+                    <select id="isNew">
+                        <option value="false">No</option>
+                        <option value="true">Sí</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Estrellas (1-5)</label>
+                    <input type="number" id="rating" step="0.1" max="5" value="5">
+                </div>
+                <div class="col">
+                    <label>Reseñas (Views)</label>
+                    <input type="number" id="reviews" value="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <label>📸 Imagen Principal</label>
+            <input type="file" id="mainImage" accept="image/*">
+            <input type="hidden" id="currentMainUrl">
+            <img id="previewMain" class="preview-main">
+
+            <label style="margin-top:15px;">Galería Adicional</label>
+            <input type="file" id="galleryImages" accept="image/*" multiple>
+        </div>
+
+        <div class="form-section">
+            <label>Descripción</label>
+            <textarea id="desc" rows="3"></textarea>
+        </div>
+
+        <button id="btnGuardar">PUBLICAR PRODUCTO</button>
+        <button onclick="borrarProducto()" id="btnBorrar" style="width:100%; margin-top:10px; background:#ef4444; color:white; border:none; padding:10px; border-radius:8px; display:none; cursor:pointer; font-weight:bold;">🗑️ BORRAR PRODUCTO</button>
+        <div id="status" class="status"></div>
+    </div>
+</div>
+
+<script>
+    const TALLAS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Única'];
+    
+    // --- CONFIGURACIÓN ---
+    const SUPABASE_URL = 'https://hotcjinskytleluersrc.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhvdGNqaW5za3l0bGVsdWVyc3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMzI2NzIsImV4cCI6MjA4NTgwODY3Mn0.7Z7bOOzj10kwPjwELzGtgHoXPN2BvrAqqp1Fsln-bQI';
+    
+    let db;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        try {
+            if (typeof supabase !== 'undefined') {
+                db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                cargarProductos(); 
+                generarUI_Tallas();
+            }
+        } catch (e) { console.error(e); }
+
+        document.getElementById('btnGuardar').onclick = guardarProducto;
+        
+        document.getElementById('mainImage').onchange = evt => {
+            const [file] = evt.target.files;
+            if(file) {
+                document.getElementById('previewMain').src = URL.createObjectURL(file);
+                document.getElementById('previewMain').style.display = 'block';
+            }
+        };
+    });
+
+    function generarUI_Tallas() {
+        const container = document.getElementById('sizesContainer');
+        container.innerHTML = '';
+        TALLAS.forEach(t => {
+            container.innerHTML += `
+                <div class="size-card">
+                    <span class="size-title">${t}</span>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="size_${t}" value="none" checked> No tengo
+                        </label>
+                        <label class="radio-label opt-yes">
+                            <input type="radio" name="size_${t}" value="ok"> Disponible
+                        </label>
+                        <label class="radio-label opt-sold">
+                            <input type="radio" name="size_${t}" value="sold"> Agotado
+                        </label>
+                    </div>
+                </div>`;
+        });
+    }
+
+    // 1. CARGAR LISTA
+    async function cargarProductos() {
+        const listDiv = document.getElementById('productList');
+        const { data, error } = await db.from('products').select('id, name, img, price').order('id', { ascending: false });
+        
+        if(error) { listDiv.innerHTML = "Error cargando lista"; return; }
+        
+        listDiv.innerHTML = '';
+        data.forEach(p => {
+            listDiv.innerHTML += `
+                <div class="product-item" onclick="cargarParaEditar(${p.id})">
+                    <img src="${p.img || 'https://via.placeholder.com/40'}" alt="img">
+                    <div class="product-info">
+                        <h4>${p.name}</h4>
+                        <p>$${p.price}</p>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // 2. MODO EDICIÓN
+    async function cargarParaEditar(id) {
+        const { data, error } = await db.from('products').select('*').eq('id', id).single();
+        if(error) return alert("Error al cargar producto");
+
+        const p = data;
+        
+        document.getElementById('editId').value = p.id;
+        document.getElementById('name').value = p.name;
+        document.getElementById('category').value = p.category;
+        document.getElementById('price').value = p.price;
+        document.getElementById('oldPrice').value = p.oldPrice || '';
+        document.getElementById('isNew').value = p.isNew ? 'true' : 'false';
+        document.getElementById('rating').value = p.rating;
+        // RECUPERAR REVIEWS (VIEWS)
+        document.getElementById('reviews').value = p.reviews || 0;
+        
+        document.getElementById('desc').value = p.desc;
+        document.getElementById('currentMainUrl').value = p.img;
+
+        const imgPrev = document.getElementById('previewMain');
+        imgPrev.src = p.img;
+        imgPrev.style.display = 'block';
+
+        // TALLAS
+        document.querySelectorAll('input[type="radio"][value="none"]').forEach(r => r.checked = true);
+        
+        if(p.sizes) {
+            const sizeArr = p.sizes.split(',').map(s => s.trim());
+            sizeArr.forEach(s => {
+                if(TALLAS.includes(s)) {
+                    const radio = document.querySelector(`input[name="size_${s}"][value="ok"]`);
+                    if(radio) radio.checked = true;
+                }
+            });
+        }
+        if(p.sold_out) {
+            const soldArr = p.sold_out.split(',').map(s => s.trim());
+            soldArr.forEach(s => {
+                if(TALLAS.includes(s)) {
+                    const radio = document.querySelector(`input[name="size_${s}"][value="sold"]`);
+                    if(radio) radio.checked = true;
+                }
+            });
+        }
+
+        const btn = document.getElementById('btnGuardar');
+        btn.innerText = "💾 GUARDAR CAMBIOS";
+        btn.classList.add('mode-edit');
+        document.getElementById('formTitle').innerText = "Editando: " + p.name;
+        document.getElementById('btnBorrar').style.display = 'block';
+        window.scrollTo(0,0);
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('editId').value = "";
+        document.getElementById('name').value = "";
+        document.getElementById('price').value = "";
+        document.getElementById('oldPrice').value = "";
+        document.getElementById('desc').value = "";
+        document.getElementById('reviews').value = "0"; // Limpiar reviews
+        document.getElementById('currentMainUrl').value = "";
+        document.getElementById('previewMain').style.display = 'none';
+        document.getElementById('mainImage').value = "";
+        
+        document.querySelectorAll('input[type="radio"][value="none"]').forEach(r => r.checked = true);
+
+        const btn = document.getElementById('btnGuardar');
+        btn.innerText = "☁️ PUBLICAR NUEVO";
+        btn.classList.remove('mode-edit');
+        document.getElementById('formTitle').innerText = "Crear Nuevo Producto";
+        document.getElementById('btnBorrar').style.display = 'none';
+    }
+
+    // 3. GUARDAR
+    async function guardarProducto() {
+        const btn = document.getElementById('btnGuardar');
+        const status = document.getElementById('status');
+        const editId = document.getElementById('editId').value;
+        
+        btn.disabled = true;
+        btn.innerText = "Procesando...";
+        status.style.display = 'none';
+
+        try {
+            let sizesList = [];
+            let soldOutList = [];
+            TALLAS.forEach(t => {
+                const val = document.querySelector(`input[name="size_${t}"]:checked`).value;
+                if (val === 'ok') sizesList.push(t);
+                else if (val === 'sold') { sizesList.push(t); soldOutList.push(t); }
+            });
+
+            let mainUrl = document.getElementById('currentMainUrl').value;
+            const mainFile = document.getElementById('mainImage').files[0];
+            if(mainFile) {
+                mainUrl = await uploadFile(mainFile, 'main');
+            }
+
+            if(!mainUrl) throw new Error("Falta la imagen principal");
+
+            const productData = {
+                name: document.getElementById('name').value,
+                category: document.getElementById('category').value,
+                price: parseFloat(document.getElementById('price').value),
+                oldPrice: document.getElementById('oldPrice').value ? parseFloat(document.getElementById('oldPrice').value) : null,
+                isNew: document.getElementById('isNew').value === 'true',
+                rating: parseFloat(document.getElementById('rating').value),
+                // GUARDAR REVIEWS
+                reviews: parseInt(document.getElementById('reviews').value) || 0,
+                desc: document.getElementById('desc').value,
+                img: mainUrl,
+                sizes: sizesList.join(', '),
+                sold_out: soldOutList.join(', ')
+            };
+
+            let errorDB;
+            if (editId) {
+                const { error } = await db.from('products').update(productData).eq('id', editId);
+                errorDB = error;
+            } else {
+                const { error } = await db.from('products').insert([productData]);
+                errorDB = error;
+            }
+
+            if (errorDB) throw errorDB;
+
+            status.innerText = editId ? "¡Actualizado correctamente!" : "¡Creado con éxito!";
+            status.className = "status success";
+            status.style.display = "block";
+            status.style.backgroundColor = "#dcfce7";
+            status.style.color = "#166534";
+            
+            cargarProductos();
+            if(!editId) limpiarFormulario();
+            
+        } catch (e) {
+            console.error(e);
+            alert("Error: " + e.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerText = editId ? "💾 GUARDAR CAMBIOS" : "☁️ PUBLICAR NUEVO";
+        }
+    }
+
+    async function borrarProducto() {
+        const id = document.getElementById('editId').value;
+        if(!id) return;
+        if(!confirm("¿Seguro que quieres borrar este producto? No se puede deshacer.")) return;
+
+        const { error } = await db.from('products').delete().eq('id', id);
+        if(error) alert("Error borrando");
+        else {
+            alert("Producto borrado");
+            limpiarFormulario();
+            cargarProductos();
+        }
+    }
+
+    async function uploadFile(file, prefix) {
+        const cleanName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+        const fileName = `${prefix}_${Date.now()}_${cleanName}`;
+        const { error } = await db.storage.from('images').upload(fileName, file);
+        if (error) throw error;
+        const { data } = db.storage.from('images').getPublicUrl(fileName);
+        return data.publicUrl;
+    }
+</script>
+
+</body>
+</html>
