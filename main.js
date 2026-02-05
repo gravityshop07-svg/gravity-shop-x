@@ -371,12 +371,16 @@ function updateCartUI() {
     
     let total = 0;
     container.innerHTML = cart.map(item => {
-        const itemTotal = item.price * item.qty;
-        total += itemTotal;
-        return `
-            <div class="cart-item">
-                <img src="${item.img}" class="cart-item-image" alt="${item.name}">
-                <div class="cart-item-info">
+    const itemTotal = item.price * item.qty;
+    total += itemTotal;
+    return `
+        <div class="cart-item">
+            <img src="${item.img}" 
+                 class="cart-item-image" 
+                 alt="${item.name}" 
+                 onclick="quickView(${item.id}); event.stopPropagation();" 
+                 style="cursor: pointer;">
+            <div class="cart-item-info">
                     <div class="cart-item-name">${item.name}</div>
                     <div class="cart-item-price">$${item.price.toFixed(2)}</div>
                     <div class="quantity-controls">
