@@ -543,15 +543,16 @@ document.querySelectorAll('.dropdown-menu a, .nav-link:not(.dropdown-toggle)').f
 
 // 3. Submenú Ropa (Lógica BLINDADA para Celular vs PC)
 function toggleSubmenu(event) {
+    // ⛔ DETIENE TODOS los listeners de clic (CLAVE)
+    event.stopImmediatePropagation();
+
     // No interferir con PC
     if (window.innerWidth > 992) {
         return;
     }
 
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
+    event.preventDefault();
+    event.stopPropagation();
 
     const submenu = document.getElementById('ropaSubmenu');
     const arrow = event.currentTarget.querySelector('.arrow-icon');
@@ -566,3 +567,4 @@ function toggleSubmenu(event) {
         if (arrow) arrow.style.transform = 'rotate(180deg)';
     }
 }
+
