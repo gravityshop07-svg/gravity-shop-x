@@ -1,4 +1,3 @@
-
 :root {
     --primary: #6366f1;
     --primary-dark: #4f46e5;
@@ -143,7 +142,7 @@ body[data-theme="dark"] .footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: nowrap !important; /* Mantiene todo en una línea en PC */
+    flex-wrap: nowrap !important;
     gap: 15px;
 }
 
@@ -157,8 +156,8 @@ body[data-theme="dark"] .footer {
     background-clip: text;
     display: flex;
     align-items: center;
-    gap: 10px; /* Separación logo-texto */
-    white-space: nowrap; /* Texto no baja */
+    gap: 10px;
+    white-space: nowrap;
     animation: glow 3s ease-in-out infinite;
     order: 1;
 }
@@ -168,9 +167,8 @@ body[data-theme="dark"] .footer {
     50% { filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.8)); }
 }
 
-/* Menú PC */
 .nav-menu {
-    display: flex; /* Visible en PC */
+    display: flex;
     gap: 20px;
     list-style: none;
     order: 2;
@@ -209,7 +207,7 @@ body[data-theme="dark"] .footer {
     border: none;
     background: transparent;
     outline: none;
-    width: 150px; /* Reducido para que quepa */
+    width: 150px;
     color: var(--text-dark);
     font-size: 0.9rem;
     transition: width 0.3s ease;
@@ -218,6 +216,7 @@ body[data-theme="dark"] .footer {
 .search-box input::placeholder {
     color: var(--text-muted);
 }
+
 .search-box input:focus {
     width: 200px;
 }
@@ -692,7 +691,7 @@ body[data-theme="dark"] .product-title {
     box-shadow: var(--shadow-lg);
 }
 
-/* Cart Sidebar (CORREGIDO PARA MÓVIL) */
+/* Cart Sidebar */
 .cart-overlay {
     position: fixed;
     top: 0;
@@ -814,6 +813,16 @@ body[data-theme="dark"] .cart-item {
     height: 70px;
     border-radius: 10px;
     object-fit: cover;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cart-item-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+body[data-theme="dark"] .cart-item-image:hover {
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
 .cart-item-info { flex: 1; }
@@ -927,15 +936,15 @@ body[data-theme="dark"] .cart-footer {
     left: 50%;
     transform: translate(-50%, -50%) scale(0.9);
     width: 90%;
-    max-width: 800px;
+    max-width: 700px;
     background: white;
     border-radius: 20px;
-    padding: 2rem;
+    padding: 1.5rem;
     z-index: 2001;
     opacity: 0;
     visibility: hidden;
     transition: var(--transition);
-    max-height: 90vh;
+    max-height: 85vh;
     overflow-y: auto;
 }
 
@@ -969,7 +978,7 @@ body[data-theme="dark"] .cart-footer {
 .gallery-container { width: 100%; text-align: center; }
 .main-image-container {
     width: 100%;
-    height: 350px;
+    height: 300px;
     background: #f8f9fa;
     border-radius: 10px;
     margin-bottom: 15px;
@@ -980,10 +989,10 @@ body[data-theme="dark"] .cart-footer {
     border: 1px solid #eee;
 }
 [data-theme="dark"] .main-image-container { background: #2a2a35; border-color: #444; }
-.modal-main-img { max-width: 100%; max-height: 100%; object-fit: contain; }
-.thumbnails-row { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.modal-main-img { max-width: 100%; max-height: 280px; object-fit: contain; }
+.thumbnails-row { display: flex; justify-content: center; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
 .thumb-img {
-    width: 60px; height: 60px; object-fit: cover;
+    width: 50px; height: 50px; object-fit: cover;
     border-radius: 8px; cursor: pointer;
     border: 2px solid transparent; opacity: 0.7;
     transition: all 0.2s ease;
@@ -1108,30 +1117,24 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
+
 /* =========================================
-   ESTILOS RESPONSIVE (MÓVIL Y TABLET) 
-   SOLUCIÓN DEFINITIVA, LIMPIA Y ORDENADA
+   RESPONSIVE MÓVIL Y TABLET
    ========================================= */
 
-/* 1. OCULTAR/MOSTRAR MENÚ SEGÚN DISPOSITIVO */
 .menu-toggle { display: none; }
 
-/* EN PC (Más de 993px): Se ve el menú normal */
 @media (min-width: 993px) {
     .nav-menu { display: flex !important; }
 }
 
-/* EN MÓVIL (Menos de 992px): Transformación total */
 @media (max-width: 992px) {
-    
-    /* A. CABECERA: Ajuste de elementos */
     .navbar-custom .container-fluid {
         flex-wrap: wrap !important;
         padding: 10px 20px;
         gap: 10px;
     }
 
-    /* B. BOTÓN HAMBURGUESA */
     .menu-toggle {
         display: block !important;
         order: 1;
@@ -1144,7 +1147,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     }
     body[data-theme="dark"] .menu-toggle { color: white; }
 
-    /* C. LOGO Y BUSCADOR */
     .navbar-brand {
         order: 2;
         font-size: 1.1rem !important;
@@ -1158,7 +1160,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     .search-box { padding: 5px 10px; }
     .search-box input { width: 80px; }
 
-    /* D. MENÚ DESPLEGABLE (El contenedor principal) */
     .nav-menu {
         display: none;
         width: 100%;
@@ -1180,38 +1181,18 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         width: 100%; padding: 15px 20px; font-size: 1rem; color: #333 !important;
     }
 
-    /* E. SUBMENÚ ROPA (LA CORRECCIÓN DEL FANTASMA) */
     .dropdown-menu {
-        position: static !important; /* Empuja el contenido hacia abajo */
+        position: static !important;
         float: none;
         width: 100%;
         box-shadow: none;
         border: none;
         background-color: #f9f9f9;
-        display: none; /* Por defecto oculto */
+        display: none;
         padding: 0;
     }
     
-    /* IMPORTANTE: Esto arregla que no cerraba. 
-       Solo se muestra si tiene la clase .show que pone el JavaScript */
     .dropdown-menu.show { display: block !important; }
-    
-    /* IMPORTANTE: Desactivamos que se abra solo por pasar el dedo/mouse */
-    /* Hover SOLO para PC */
-@media (hover: hover) and (pointer: fine) {
-    .dropdown-menu {
-        display: none;
-    }
-
-    .nav-item:hover .dropdown-menu {
-        display: block;
-    }
-}
-
-.dropdown-menu.show {
-    display: block;
-}
-
 
     .dropdown-menu a {
         padding: 12px 40px;
@@ -1219,28 +1200,31 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         border-bottom: 1px solid #eee;
     }
 
-    /* F. MODO OSCURO MÓVIL */
     body[data-theme="dark"] .nav-menu { background-color: #1a1a1a; border-color: #333; }
     body[data-theme="dark"] .nav-item { border-color: #333; }
     body[data-theme="dark"] .nav-link { color: white !important; }
     body[data-theme="dark"] .dropdown-menu { background-color: #111; }
     body[data-theme="dark"] .dropdown-menu a { color: #aaa !important; border-color: #222; }
 
-    /* G. CARRITO LATERAL EN MÓVIL */
     .cart-sidebar {
         display: flex !important;
         flex-direction: column !important;
         height: 100vh !important;
         width: 100% !important;
+        right: -100% !important;
     }
+    
+    .cart-sidebar.show {
+        right: 0 !important;
+    }
+    
     .cart-body { flex: 1 !important; overflow-y: auto !important; height: auto !important; }
     .cart-footer {
         position: relative !important; bottom: 0 !important; width: 100% !important;
-        z-index: 10; padding-bottom: 80px !important; /* Espacio para WhatsApp */
+        z-index: 10; padding-bottom: 80px !important;
     }
 }
 
-/* 2. ARREGLO PORTADA (SLIDER) MÓVIL */
 @media (max-width: 768px) {
     .hero-slider { height: 50vh !important; min-height: 350px !important; }
     .hero-slide { background-size: cover !important; background-position: center center !important; }
@@ -1250,7 +1234,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     .cta-btn { padding: 0.6rem 1.2rem !important; font-size: 0.9rem !important; }
 }
 
-/* 3. ARREGLO BOTÓN OJITO (SIEMPRE VISIBLE) */
 .product-actions {
     opacity: 1 !important;
     transform: none !important;
@@ -1258,24 +1241,13 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     top: 10px !important;
 }
 
-/* 4. ARREGLO DEFINITIVO DEL MODAL (OJITO) */
-/* =========================================
-   CORRECCIONES GRAVITY SHOP X - COPIAR TODO ESTO
-   Pegar al final del <style> en index.html
-   ========================================= */
-
-/* =========================================
-   CORRECCIÓN 1: MODAL CENTRADO EN MÓVIL
-   ========================================= */
 @media (max-width: 768px) {
-    /* Contenedor principal del modal */
     .quick-view-modal {
         padding: 1rem !important;
         max-height: 95vh !important;
         overflow-y: auto !important;
     }
 
-    /* Contenedor de la galería - CENTRADO TOTAL */
     .gallery-container {
         width: 100% !important;
         display: flex !important;
@@ -1284,7 +1256,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         margin-bottom: 1rem !important;
     }
 
-    /* Contenedor de imagen principal - SIN FONDOS RAROS */
     .main-image-container {
         width: 100% !important;
         max-width: 100% !important;
@@ -1301,7 +1272,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         padding: 10px 0 !important;
     }
 
-    /* Imagen principal - CENTRADA Y CONTENIDA */
     .modal-main-img {
         width: auto !important;
         height: auto !important;
@@ -1313,7 +1283,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         border-radius: 12px !important;
     }
 
-    /* Miniaturas centradas */
     .thumbnails-row {
         display: flex !important;
         justify-content: center !important;
@@ -1328,7 +1297,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         height: 55px !important;
     }
 
-    /* Contenido de texto - TODO CENTRADO */
     #quickViewContent {
         display: flex !important;
         flex-direction: column !important;
@@ -1344,32 +1312,27 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         text-align: center !important;
     }
 
-    /* Título y categoría centrados */
     .product-category,
     #quickViewContent h2 {
         text-align: center !important;
         width: 100% !important;
     }
 
-    /* Rating centrado */
     .product-rating {
         justify-content: center !important;
         width: 100% !important;
     }
 
-    /* Descripción centrada */
     #quickViewContent p {
         text-align: center !important;
         width: 100% !important;
     }
 
-    /* Precios centrados */
     #quickViewContent > div > div[style*="margin-bottom: 2rem"] {
         text-align: center !important;
         width: 100% !important;
     }
 
-    /* Botón de agregar al carrito - ANCHO COMPLETO */
     #quickViewContent button {
         width: 100% !important;
         max-width: 100% !important;
@@ -1378,7 +1341,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         font-size: 1rem !important;
     }
 
-    /* Botón X de cerrar - SIEMPRE VISIBLE */
     .close-modal-btn {
         position: absolute !important;
         top: 10px !important;
@@ -1396,13 +1358,7 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         background: #1e1e24 !important;
         color: white !important;
     }
-}
 
-/* =========================================
-   CORRECCIÓN 2: CARRITO EN MÓVIL
-   ========================================= */
-@media (max-width: 768px) {
-    /* Sidebar del carrito - ANCHO COMPLETO */
     .cart-sidebar {
         width: 100% !important;
         right: -100% !important;
@@ -1413,7 +1369,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         right: 0 !important;
     }
 
-    /* Header del carrito */
     .cart-header {
         padding: 1.5rem 1rem !important;
     }
@@ -1422,7 +1377,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         font-size: 1.2rem !important;
     }
 
-    /* Body del carrito con scroll suave */
     .cart-body {
         padding: 1rem !important;
         flex: 1 !important;
@@ -1430,7 +1384,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         max-height: calc(100vh - 250px) !important;
     }
 
-    /* Items del carrito más compactos */
     .cart-item {
         padding: 0.8rem !important;
         gap: 0.8rem !important;
@@ -1445,7 +1398,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         font-size: 0.9rem !important;
     }
 
-    /* Footer del carrito - FIJO Y CENTRADO */
     .cart-footer {
         position: sticky !important;
         bottom: 0 !important;
@@ -1461,13 +1413,11 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         background: #1e1e24 !important;
     }
 
-    /* Total más visible */
     .cart-total {
         font-size: 1.3rem !important;
         margin-bottom: 1rem !important;
     }
 
-    /* BOTÓN DE CHECKOUT - PERFECTO Y CENTRADO */
     .checkout-btn {
         width: 100% !important;
         padding: 1rem !important;
@@ -1486,39 +1436,16 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
 }
 
 /* =========================================
-   AJUSTE DE GRID DE PRODUCTOS - 4 POR FILA EN PC
-   Pegar al final del <style> en index.html
+   GRID DE PRODUCTOS - 4 EN PC, 1 EN MÓVIL
    ========================================= */
 
-/* Redefinir el grid de productos para 4 columnas en PC */
 @media (min-width: 1200px) {
     .products-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr) !important;
         gap: 1.5rem !important;
     }
-}
-
-/* Para pantallas medianas (tablets/laptops pequeños) - 3 productos */
-@media (min-width: 768px) and (max-width: 1199px) {
-    .products-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 1.5rem !important;
-    }
-}
-
-/* Para pantallas pequeñas (móviles) - 2 productos */
-@media (max-width: 767px) {
-    .products-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 1rem !important;
-    }
-}
-
-/* Ajustar tamaño de las tarjetas para que se vean bien */
-@media (min-width: 1200px) {
+    
     .card-product {
         max-width: 100% !important;
     }
@@ -1536,61 +1463,64 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     }
 }
 
-/* Opcional: Si quieres 5 productos en pantallas muy grandes */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1.5rem !important;
+    }
+}
+
+/* MÓVIL - 1 PRODUCTO POR FILA */
+@media (max-width: 767px) {
+    .products-grid {
+        display: grid;
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        padding: 0 1rem !important;
+    }
+    
+    .card-product {
+        max-width: 100% !important;
+        margin: 0 auto !important;
+    }
+    
+    .img-wrapper {
+        height: 280px !important;
+    }
+    
+    .card-body {
+        padding: 1.2rem !important;
+    }
+    
+    .product-title {
+        font-size: 1.1rem !important;
+    }
+}
+
 @media (min-width: 1600px) {
     .products-grid {
         grid-template-columns: repeat(5, 1fr) !important;
     }
 }
+
 /* =========================================
-   AJUSTAR TAMAÑO DEL MODAL (OJITO) - MÁS COMPACTO
-   Pegar al final del <style> en index.html
+   MODAL COMPACTO EN PC
    ========================================= */
 
-/* Modal más pequeño y compacto en PC */
-.quick-view-modal {
-    max-width: 700px !important; /* Antes era 800px */
-    max-height: 85vh !important; /* Limita la altura */
-    padding: 1.5rem !important; /* Menos padding */
-    overflow-y: auto !important;
-}
-
-/* Ajustar el contenido interno para que no sea tan alto */
 #quickViewContent {
     max-height: 75vh !important;
     overflow-y: auto !important;
 }
 
-/* Grid más compacto - imagen al lado del texto */
 #quickViewContent > div[style*="grid"] {
-    grid-template-columns: 1fr 1fr !important; /* 50% imagen, 50% texto */
+    grid-template-columns: 1fr 1fr !important;
     gap: 1.5rem !important;
     align-items: start !important;
 }
 
-/* Imagen principal más pequeña */
-.main-image-container {
-    height: 300px !important; /* Antes era más grande */
-    max-height: 300px !important;
-}
-
-.modal-main-img {
-    max-height: 280px !important;
-}
-
-/* Miniaturas más pequeñas */
-.thumbnails-row {
-    gap: 6px !important;
-}
-
-.thumb-img {
-    width: 50px !important;
-    height: 50px !important;
-}
-
-/* Textos más compactos */
 #quickViewContent h2 {
-    font-size: 1.5rem !important; /* Título más pequeño */
+    font-size: 1.5rem !important;
     margin-bottom: 0.8rem !important;
 }
 
@@ -1600,24 +1530,20 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     margin-bottom: 1rem !important;
 }
 
-/* Precio más compacto */
 #quickViewContent > div > div > div[style*="font-size: 2rem"] {
     font-size: 1.8rem !important;
 }
 
-/* Botón más pequeño */
 #quickViewContent button {
     padding: 0.8rem 1.5rem !important;
     font-size: 1rem !important;
 }
 
-/* Rating más pequeño */
 .product-rating {
     font-size: 0.85rem !important;
     margin-bottom: 0.8rem !important;
 }
 
-/* Para tablets y móviles - que siga siendo vertical pero compacto */
 @media (max-width: 992px) {
     .quick-view-modal {
         max-width: 90% !important;
@@ -1626,7 +1552,7 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     }
     
     #quickViewContent > div[style*="grid"] {
-        grid-template-columns: 1fr !important; /* Una columna en móvil */
+        grid-template-columns: 1fr !important;
     }
     
     .main-image-container {
@@ -1638,7 +1564,6 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
     }
 }
 
-/* Para móviles pequeños */
 @media (max-width: 576px) {
     .quick-view-modal {
         max-width: 95% !important;
