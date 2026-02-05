@@ -1578,3 +1578,101 @@ body[data-theme="dark"] .footer-bottom { border-top: 1px solid var(--dark-border
         font-size: 1.2rem !important;
     }
 }
+/* =========================================
+   CORRECCIÓN FINAL: MISMO ANCHO Y ALTO EN MÓVIL
+   Pegar AL FINAL de style.css
+   ========================================= */
+
+/* MÓVIL - Forzar mismas dimensiones para TODAS las tarjetas */
+@media (max-width: 767px) {
+    
+    /* Grid de 1 columna con ancho fijo */
+    .products-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1.5rem !important;
+        padding: 0 1rem !important;
+        align-items: center !important;
+    }
+    
+    /* Tarjeta con ancho y alto FIJOS */
+    .card-product {
+        width: 100% !important;
+        max-width: 350px !important; /* Ancho máximo fijo */
+        min-width: 350px !important; /* Ancho mínimo fijo */
+        height: 500px !important; /* Altura fija */
+        display: flex !important;
+        flex-direction: column !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Imagen con altura fija */
+    .img-wrapper {
+        width: 100% !important;
+        height: 300px !important;
+        min-height: 300px !important;
+        max-height: 300px !important;
+        flex-shrink: 0 !important;
+        background: #f3f4f6 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .card-img-top {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        padding: 10px !important;
+    }
+    
+    /* Body con altura fija y flex */
+    .card-body {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 1rem !important;
+        min-height: 200px !important;
+        max-height: 200px !important;
+        overflow: hidden !important;
+    }
+    
+    /* Título con máximo 2 líneas */
+    .product-title {
+        font-size: 1rem !important;
+        line-height: 1.3 !important;
+        min-height: 40px !important;
+        max-height: 40px !important;
+        overflow: hidden !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Footer siempre abajo */
+    .product-footer {
+        margin-top: auto !important;
+        padding-top: 0.5rem !important;
+    }
+    
+    /* Badges y botones */
+    .product-badge {
+        font-size: 0.7rem !important;
+        padding: 0.3rem 0.6rem !important;
+    }
+    
+    .add-cart-btn {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
+
+/* Para pantallas MUY pequeñas (menos de 360px) */
+@media (max-width: 360px) {
+    .card-product {
+        min-width: 100% !important;
+        max-width: 100% !important;
+    }
+}
