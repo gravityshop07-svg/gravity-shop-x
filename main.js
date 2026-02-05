@@ -45,16 +45,16 @@ async function initApp() {
     initScrollEffects();
     loadTheme();
     
-    // --- CORRECCIÓN SOLICITADA: PRECIO MÁXIMO $50 ---
+    // --- PRECIO MÁXIMO $50 ---
     const priceRange = document.getElementById('priceRange');
     const priceValue = document.getElementById('priceValue');
     if (priceRange) {
-        priceRange.max = 50;     // Cambia el tope de 500 a 50
-        priceRange.value = 50;   // Pone la bolita al máximo
+        priceRange.max = 50;
+        priceRange.value = 50; 
         if(priceValue) priceValue.textContent = '$50';
     }
 
-    // --- CORRECCIÓN SOLICITADA: BOTÓN FLOTANTE AL NÚMERO REAL ---
+    // --- BOTÓN FLOTANTE AL NÚMERO REAL ---
     const floatBtn = document.querySelector('.whatsapp-float');
     if (floatBtn) {
         floatBtn.href = `https://wa.me/${PHONE_NUMBER}`;
@@ -117,7 +117,6 @@ function renderProducts() {
 
     // Verificación segura de elementos
     const priceRange = document.getElementById('priceRange');
-    // Usamos el valor del rango, si no existe asumimos 50
     const maxPrice = priceRange ? parseInt(priceRange.value) : 50;
     
     const searchInput = document.getElementById('searchInput');
@@ -128,7 +127,7 @@ function renderProducts() {
     
     // Filtrado
     let filtered = products.filter(p => {
-        const pCategory = p.category || ''; // Evitar error si es null
+        const pCategory = p.category || ''; 
         const matchCategory = currentFilter === 'all' || pCategory === currentFilter;
         
         const safePrice = p.price || 0;
@@ -137,21 +136,15 @@ function renderProducts() {
         
         const matchPrice = safePrice <= maxPrice;
         const matchSearch = safeName.toLowerCase().includes(searchVal) || 
-                           safeDesc.toLowerCase().includes(searchVal);
+                            safeDesc.toLowerCase().includes(searchVal);
         return matchCategory && matchPrice && matchSearch;
     });
     
     // Ordenamiento
     switch(sortType) {
-        case 'price-low':
-            filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
-            break;
-        case 'price-high':
-            filtered.sort((a, b) => (b.price || 0) - (a.price || 0));
-            break;
-        case 'rating':
-            filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-            break;
+        case 'price-low': filtered.sort((a, b) => (a.price || 0) - (b.price || 0)); break;
+        case 'price-high': filtered.sort((a, b) => (b.price || 0) - (a.price || 0)); break;
+        case 'rating': filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
     }
     
     // Renderizar vacio
@@ -173,7 +166,7 @@ function createProductCard(product) {
     const discount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
     const imageSrc = product.img || 'https://via.placeholder.com/300?text=Sin+Imagen';
     
-    // --- LÓGICA DE TALLAS (NUEVO) ---
+    // --- LÓGICA DE TALLAS ---
     let sizesHtml = '';
     if (product.sizes) {
         const allSizes = product.sizes.split(',').map(s => s.trim());
@@ -181,10 +174,8 @@ function createProductCard(product) {
         
         const badges = allSizes.map(s => {
             if (soldSizes.includes(s)) {
-                // Talla agotada: Tachada y gris
                 return `<span style="text-decoration:line-through; color:#aaa; margin-right:6px; font-size:0.85rem;">${s}</span>`;
             } else {
-                // Talla disponible: Normal/Negrita
                 return `<span style="font-weight:bold; color:var(--text-color); margin-right:6px; font-size:0.85rem; border:1px solid #ddd; padding:1px 5px; border-radius:4px;">${s}</span>`;
             }
         }).join('');
@@ -196,10 +187,8 @@ function createProductCard(product) {
         <div class="card-product animate__animated animate__fadeInUp">
             <div class="img-wrapper">
                 <img src="${imageSrc}" class="card-img-top" alt="${product.name}" loading="lazy">
-                
                 ${product.isNew ? '<span class="product-badge badge-new">Nuevo</span>' : ''}
                 ${discount > 0 ? `<span class="product-badge badge-discount">-${discount}%</span>` : ''}
-                
                 <div class="product-actions">
                     <button class="action-btn" onclick="quickView(${product.id})" title="Vista rápida">
                         <i class="fas fa-eye"></i>
@@ -210,9 +199,7 @@ function createProductCard(product) {
             <div class="card-body">
                 <div class="product-category">${getCategoryName(product.category)}</div>
                 <h5 class="product-title">${product.name}</h5>
-                
                 ${sizesHtml}
-                
                 <div class="product-rating">
                     <span class="stars">
                         ${'<i class="fas fa-star"></i>'.repeat(Math.floor(product.rating || 5))}
@@ -238,12 +225,9 @@ function createProductCard(product) {
 function getCategoryName(category) {
     if (!category) return 'General';
     const names = {
-        'tecnologia': 'Tecnología',
-        'accesorios': 'Accesorios',
-        'camisa-hombre': 'Camisa de Hombre',
-        'buso-hombre': 'Buso de Hombre',
-        'dividi-hombre': 'Dividi de Hombre',
-        'buso-mujer': 'Buso de Mujer'
+        'tecnologia': 'Tecnología', 'accesorios': 'Accesorios',
+        'camisa-hombre': 'Camisa de Hombre', 'buso-hombre': 'Buso de Hombre',
+        'dividi-hombre': 'Dividi de Hombre', 'buso-mujer': 'Buso de Mujer'
     };
     return names[category] || category;
 }
@@ -345,27 +329,18 @@ function updateCartUI() {
         return `
             <div class="cart-item">
                 <img src="${item.img}" class="cart-item-image" alt="${item.name}">
-                
                 <div class="cart-item-info">
                     <div class="cart-item-name">${item.name}</div>
                     <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-                    
                     <div class="quantity-controls">
-                        <button class="qty-btn" onclick="updateQty(${item.id}, -1)">
-                            <i class="fas fa-minus"></i>
-                        </button>
+                        <button class="qty-btn" onclick="updateQty(${item.id}, -1)"> <i class="fas fa-minus"></i> </button>
                         <span class="qty-display">${item.qty}</span>
-                        <button class="qty-btn" onclick="updateQty(${item.id}, 1)">
-                            <i class="fas fa-plus"></i>
-                        </button>
+                        <button class="qty-btn" onclick="updateQty(${item.id}, 1)"> <i class="fas fa-plus"></i> </button>
                     </div>
                 </div>
-                
                 <div style="text-align: right;">
                     <div style="font-weight: 700; margin-bottom: 0.5rem;">$${itemTotal.toFixed(2)}</div>
-                    <button class="remove-btn" onclick="removeFromCart(${item.id})">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                    <button class="remove-btn" onclick="removeFromCart(${item.id})"> <i class="fas fa-trash"></i> </button>
                 </div>
             </div>
         `;
@@ -391,7 +366,7 @@ function toggleCart(forceOpen = false) {
 }
 
 // ==========================================
-// CHECKOUT WHATSAPP (MODIFICADO: DIRECTO Y AUTOMATIZADO)
+// CHECKOUT WHATSAPP
 // ==========================================
 function checkoutWhatsApp() {
     if (cart.length === 0) {
@@ -399,8 +374,6 @@ function checkoutWhatsApp() {
         return;
     }
 
-    // --- CORRECCIÓN: SIN PREGUNTAS, DIRECTO AL CHAT ---
-    
     let total = 0;
     let message = "✨ *NUEVO PEDIDO - GRAVITY SHOP X* ✨\n";
     message += "─────────────────────\n";
@@ -409,30 +382,22 @@ function checkoutWhatsApp() {
     cart.forEach(item => {
         const itemTotal = item.price * item.qty;
         total += itemTotal;
-        // Agregamos tallas al mensaje si el producto tiene
         const sizeInfo = item.sizes ? ` (Tallas: ${item.sizes})` : '';
-        
-        message += `▪️ *${item.name}*${sizeInfo}\n`;
-        message += `   ╰ ${item.qty} x $${item.price.toFixed(2)} = *$${itemTotal.toFixed(2)}*\n\n`;
+        message += `▪️ *${item.name}*${sizeInfo}\n   ╰ ${item.qty} x $${item.price.toFixed(2)} = *$${itemTotal.toFixed(2)}*\n\n`;
     });
     
     message += "─────────────────────\n";
     message += `💰 *TOTAL A PAGAR: $${total.toFixed(2)}*\n`;
     message += "─────────────────────\n\n";
-    
     message += "👋 ¡Hola! Ya tengo listo mi pedido en el carrito. Quedo atento/a para finalizar la compra. 🚀";
     
-    // Usamos la constante PHONE_NUMBER definida arriba
     const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
-    
     window.open(whatsappUrl, '_blank');
 }
 
 // ==========================================
-// VISTA RÁPIDA (QUICK VIEW) CON GALERÍA
+// VISTA RÁPIDA (QUICK VIEW)
 // ==========================================
-
-// Función auxiliar para cambiar imagen de galería
 window.changeModalImage = function(src, element) {
     const mainImg = document.getElementById('quickViewMainImg');
     if(mainImg) {
@@ -442,7 +407,6 @@ window.changeModalImage = function(src, element) {
             mainImg.style.opacity = '1';
         }, 150);
     }
-    // Actualizar estilo activo
     document.querySelectorAll('.thumb-img').forEach(el => el.classList.remove('active'));
     if(element) element.classList.add('active');
 }
@@ -451,13 +415,8 @@ function quickView(id) {
     const product = products.find(p => p.id === id);
     if (!product) return;
     
-    const discount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
-    
-    // LÓGICA DE GALERÍA DE IMÁGENES
     let imagesHtml = '';
-    
     if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-        // Modo Galería
         const thumbnails = product.images.map((img, index) => 
             `<img src="${img}" class="thumb-img ${index === 0 ? 'active' : ''}" onclick="changeModalImage('${img}', this)">`
         ).join('');
@@ -467,22 +426,14 @@ function quickView(id) {
                 <div class="main-image-container">
                     <img src="${product.images[0]}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}">
                 </div>
-                <div class="thumbnails-row">
-                    ${thumbnails}
-                </div>
+                <div class="thumbnails-row">${thumbnails}</div>
             </div>
         `;
     } else {
-        // Modo Imagen Única (Usa product.img si no hay galería)
         const imageSrc = product.img || 'https://via.placeholder.com/300?text=Sin+Imagen';
-        imagesHtml = `
-            <div class="main-image-container">
-                <img src="${imageSrc}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}">
-            </div>
-        `;
+        imagesHtml = `<div class="main-image-container"><img src="${imageSrc}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}"></div>`;
     }
 
-    // TALLAS EN EL MODAL (CON ESTADO AGOTADO)
     let sizeHtml = '';
     if (product.sizes) {
         const allSizes = product.sizes.split(',').map(s => s.trim());
@@ -494,49 +445,23 @@ function quickView(id) {
         sizeHtml = `<div style="margin:15px 0;"><strong>Tallas:</strong> ${badges}</div>`;
     }
 
-    // CONTENIDO DEL MODAL
     const content = `
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; align-items: start;">
-            
-            <div>
-                ${imagesHtml}
-            </div>
-            
+            <div>${imagesHtml}</div>
             <div>
                 <div class="product-category" style="margin-bottom: 0.5rem;">${getCategoryName(product.category)}</div>
                 <h2 style="margin-bottom: 1rem;">${product.name}</h2>
-                
                 ${sizeHtml}
-
                 <div class="product-rating" style="margin-bottom: 1rem;">
-                    <span class="stars">
-                        ${'<i class="fas fa-star"></i>'.repeat(Math.floor(product.rating || 5))}
-                        ${(product.rating || 5) % 1 !== 0 ? '<i class="fas fa-star-half-alt"></i>' : ''}
-                    </span>
+                    <span class="stars">${'<i class="fas fa-star"></i>'.repeat(Math.floor(product.rating || 5))}</span>
                     <span>${product.rating || 5} (${product.reviews || 0} reseñas)</span>
                 </div>
-                
                 <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.8;">${product.desc || ''}</p>
-                
                 <div style="margin-bottom: 2rem;">
-                    ${product.oldPrice ? `
-                        <div style="color: var(--text-muted); text-decoration: line-through; font-size: 1rem; margin-bottom: 0.5rem;">
-                            $${product.oldPrice.toFixed(2)}
-                        </div>
-                    ` : ''}
-                    <div style="font-size: 2rem; font-weight: 900; color: var(--primary);">
-                        $${product.price.toFixed(2)}
-                    </div>
-                    ${discount > 0 ? `
-                        <div style="display: inline-block; background: var(--danger); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-top: 0.5rem;">
-                            Ahorra ${discount}%
-                        </div>
-                    ` : ''}
+                    <div style="font-size: 2rem; font-weight: 900; color: var(--primary);">$${product.price.toFixed(2)}</div>
                 </div>
-                
-                <button onclick="addToCart(${product.id}); closeQuickView();" style="width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: var(--transition);">
-                    <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i>
-                    Agregar al Carrito
+                <button onclick="addToCart(${product.id}); closeQuickView();" style="width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
+                    <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i> Agregar al Carrito
                 </button>
             </div>
         </div>
@@ -551,26 +476,22 @@ function quickView(id) {
 function closeQuickView() {
     const modal = document.getElementById('quickViewModal');
     if (modal) modal.classList.remove('show');
-
     const overlay = document.getElementById('quickViewOverlay');
     if (overlay) overlay.classList.remove('show');
-    
     document.body.style.overflow = 'auto';
 }
 
 // ==========================================
-// HERO SLIDER
+// SLIDER, SCROLL & UTILS
 // ==========================================
 function initSlider() {
     const slides = document.querySelectorAll('.hero-slide');
     if (slides.length === 0) return;
-
     const dots = document.querySelectorAll('.dot');
     
     function showSlide(index) {
         slides.forEach(slide => slide.classList.remove('active'));
         dots.forEach(dot => dot.classList.remove('active'));
-        
         slides[index].classList.add('active');
         if(dots[index]) dots[index].classList.add('active');
     }
@@ -580,28 +501,20 @@ function initSlider() {
         showSlide(currentSlide);
     }
     
-    // Auto slide
     slideInterval = setInterval(nextSlide, 5000);
-    
-    // Pausar en hover
     const slider = document.querySelector('.hero-slider');
     if (slider) {
         slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
-        slider.addEventListener('mouseleave', () => {
-            slideInterval = setInterval(nextSlide, 5000);
-        });
+        slider.addEventListener('mouseleave', () => { slideInterval = setInterval(nextSlide, 5000); });
     }
 }
 
 function changeSlide(direction) {
     const slides = document.querySelectorAll('.hero-slide');
     if (slides.length === 0) return;
-
     currentSlide = (currentSlide + direction + slides.length) % slides.length;
-    
     slides.forEach(slide => slide.classList.remove('active'));
     document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
-    
     slides[currentSlide].classList.add('active');
     const dots = document.querySelectorAll('.dot');
     if(dots[currentSlide]) dots[currentSlide].classList.add('active');
@@ -610,23 +523,16 @@ function changeSlide(direction) {
 function goToSlide(index) {
     const slides = document.querySelectorAll('.hero-slide');
     currentSlide = index;
-    
     slides.forEach(slide => slide.classList.remove('active'));
     document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
-    
     slides[currentSlide].classList.add('active');
     const dots = document.querySelectorAll('.dot');
     if(dots[currentSlide]) dots[currentSlide].classList.add('active');
 }
 
-// ==========================================
-// TEMA OSCURO/CLARO
-// ==========================================
 function loadTheme() {
     const savedTheme = localStorage.getItem('theme');
-    // Buscamos el ícono de forma genérica
     const themeIcon = document.querySelector('.icon-btn i.fa-moon') || document.querySelector('.icon-btn i.fa-sun');
-    
     if (savedTheme === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
         if(themeIcon) {
@@ -636,53 +542,26 @@ function loadTheme() {
     }
 }
 
-// Nota: La función toggleTheme ya no se usa aquí porque el HTML la maneja directamente
-// para evitar conflictos, pero la dejamos por si acaso algún otro script la llama.
-function toggleTheme() {
-    // Dejamos esta función vacía o redirigimos al HTML si fuera necesario.
-}
+function toggleTheme() { } // Manejado por HTML
 
-// ==========================================
-// NOTIFICACIONES
-// ==========================================
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
     const msgElement = document.getElementById('notifMsg');
-    
     if (!notification || !msgElement) return;
-
     msgElement.textContent = message;
-    
-    if (type === 'error') {
-        notification.style.borderLeftColor = 'var(--danger)';
-    } else {
-        notification.style.borderLeftColor = 'var(--success)';
-    }
-    
+    if (type === 'error') notification.style.borderLeftColor = 'var(--danger)';
+    else notification.style.borderLeftColor = 'var(--success)';
     notification.classList.add('show');
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 3000);
+    setTimeout(() => { notification.classList.remove('show'); }, 3000);
 }
 
-// ==========================================
-// EFECTOS DE SCROLL
-// ==========================================
 function initScrollEffects() {
     const scrollTopBtn = document.getElementById('scrollTop');
-    
     window.addEventListener('scroll', () => {
-        // Mostrar botón de scroll to top
         if (scrollTopBtn) {
-            if (window.scrollY > 300) {
-                scrollTopBtn.classList.add('show');
-            } else {
-                scrollTopBtn.classList.remove('show');
-            }
+            if (window.scrollY > 300) scrollTopBtn.classList.add('show');
+            else scrollTopBtn.classList.remove('show');
         }
-        
-        // Animación de productos al hacer scroll
         const products = document.querySelectorAll('.card-product');
         products.forEach(product => {
             const rect = product.getBoundingClientRect();
@@ -694,66 +573,36 @@ function initScrollEffects() {
     });
 }
 
-// ==========================================
-// UTILIDADES
-// ==========================================
-
-// Cerrar modales con tecla ESC
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeQuickView();
         const cartSidebar = document.querySelector('.cart-sidebar');
-        if (cartSidebar && cartSidebar.classList.contains('show')) {
-            toggleCart();
-        }
+        if (cartSidebar && cartSidebar.classList.contains('show')) toggleCart();
     }
 });
 
-// Prevenir scroll cuando hay modales abiertos
-function preventScroll() {
-    document.body.style.overflow = 'hidden';
-}
-
-function allowScroll() {
-    document.body.style.overflow = 'auto';
-}
-
-// Formato de moneda
-function formatCurrency(amount) {
-    return '$' + amount.toFixed(2);
-}
-
-// Debounce para búsqueda
+function preventScroll() { document.body.style.overflow = 'hidden'; }
+function allowScroll() { document.body.style.overflow = 'auto'; }
+function formatCurrency(amount) { return '$' + amount.toFixed(2); }
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        const later = () => { clearTimeout(timeout); func(...args); };
+        clearTimeout(timeout); timeout = setTimeout(later, wait);
     };
 }
-// Función para abrir/cerrar menú en celular
-function toggleMenu() {
-    const menu = document.getElementById('navMenu');
-    menu.classList.toggle('active');
-}
+
 // ==========================================
-// FUNCIONES PARA CELULAR
+// FUNCIONES MÓVILES (LIMPIAS Y DEFINITIVAS)
 // ==========================================
 
-// 1. ABRIR/CERRAR MENÚ
+// 1. Abrir/Cerrar Menú Principal (SOLO UNA VEZ)
 function toggleMenu() {
     const menu = document.getElementById('navMenu');
-    if (menu) {
-        menu.classList.toggle('active');
-    }
+    if (menu) menu.classList.toggle('active');
 }
 
-// Cerrar menú al tocar un enlace
-// Cerrar menú al tocar un enlace (CORREGIDO)
+// 2. Control Inteligente de Clics en el Menú (CORREGIDO)
 document.querySelectorAll('.nav-link, .dropdown-menu a').forEach(link => {
     link.addEventListener('click', (e) => {
         // TRUCO: Si el enlace que toqué está dentro del botón de "ROPA", NO cierres el menú
@@ -767,34 +616,11 @@ document.querySelectorAll('.nav-link, .dropdown-menu a').forEach(link => {
     });
 });
 
-// 2. ARREGLO DEL PRECIO AL INICIAR
-// Asegura que el slider funcione con los valores del HTML (3 a 50)
-document.addEventListener('DOMContentLoaded', () => {
-    const range = document.getElementById('priceRange');
-    if(range) {
-        range.max = 50; 
-        range.min = 3;
-        range.value = 50; // Empezar en el máximo
-        
-        // Actualizar etiqueta
-        const valLabel = document.getElementById('priceValue');
-        if(valLabel) valLabel.textContent = '$50';
-    }
-});
-// ==========================================
-// FUNCIONES MÓVILES (Main.js)
-// ==========================================
-
-function toggleMenu() {
-    const menu = document.getElementById('navMenu');
-    menu.classList.toggle('active');
-}
-
-// CORRECCIÓN PARA QUE ROPA ABRA SIEMPRE
+// 3. Submenú Ropa (Acordeón)
 function toggleSubmenu(event) {
     if (event) {
-        event.preventDefault(); // Evita que recargue la página
-        event.stopPropagation(); // Evita que se cierre el menú principal
+        event.preventDefault();
+        event.stopPropagation();
     }
     
     const submenu = document.getElementById('ropaSubmenu');
