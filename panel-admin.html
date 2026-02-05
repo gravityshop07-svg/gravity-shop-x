@@ -14,6 +14,18 @@
         
         /* Sidebar */
         .sidebar { background: white; padding: 15px; border-radius: 12px; height: 85vh; overflow-y: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        
+        /* FILTROS EN SIDEBAR */
+        .filter-section { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb; }
+        .filter-section h3 { margin: 0 0 10px 0; font-size: 0.85rem; color: #6b7280; text-transform: uppercase; }
+        .search-box { width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.9rem; box-sizing: border-box; }
+        .search-box:focus { outline: 2px solid #6366f1; border-color: transparent; }
+        
+        .category-filter { display: flex; flex-direction: column; gap: 6px; }
+        .category-btn { padding: 8px 12px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; text-align: left; }
+        .category-btn:hover { background: #f3f4f6; border-color: #6366f1; }
+        .category-btn.active { background: #6366f1; color: white; border-color: #6366f1; font-weight: 600; }
+        
         .product-item { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
         .product-item:hover { background: #f9fafb; }
         .product-item img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; }
@@ -34,7 +46,7 @@
         .row { display: flex; gap: 15px; }
         .col { flex: 1; }
 
-        /* Tallas (Diseño Recto y Ordenado) */
+        /* Tallas */
         .sizes-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; }
         .size-card { background: #ffffff; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s; }
         .size-card:hover { border-color: #6366f1; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
@@ -47,6 +59,14 @@
         .radio-label.opt-sold { color: #dc2626; font-weight: 600; }
         .radio-label.opt-sold input { accent-color: #dc2626; }
 
+        /* GALERÍA DE IMÁGENES */
+        .gallery-preview { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .gallery-preview img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; border: 2px solid #e5e7eb; }
+        .current-gallery { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .current-gallery-item { position: relative; }
+        .current-gallery-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; border: 2px solid #6366f1; }
+        .current-gallery-item button { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 14px; line-height: 1; }
+
         /* Botones */
         #btnGuardar { width: 100%; padding: 1rem; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
         #btnGuardar:hover { background: #4338ca; }
@@ -56,7 +76,7 @@
         .preview-main { max-width: 100px; display: none; margin-top: 10px; border-radius: 6px; border: 1px solid #ddd; }
         .status { margin-top: 10px; text-align: center; font-weight: bold; padding: 10px; border-radius: 6px; display: none; }
 
-        @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } .sidebar { height: auto; max-height: 300px; } }
+        @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } .sidebar { height: auto; max-height: 500px; } }
     </style>
 </head>
 <body>
@@ -65,7 +85,28 @@
     
     <div class="sidebar">
         <button class="btn-new" onclick="limpiarFormulario()">+ CREAR NUEVO</button>
-        <h3 style="margin-top:0; font-size:0.9rem; color:#888;">TUS CAMISAS:</h3>
+        
+        <!-- FILTRO DE BÚSQUEDA -->
+        <div class="filter-section">
+            <h3>🔍 Buscar Producto</h3>
+            <input type="text" class="search-box" id="searchFilter" placeholder="Buscar por nombre..." oninput="aplicarFiltros()">
+        </div>
+        
+        <!-- FILTRO POR CATEGORÍA -->
+        <div class="filter-section">
+            <h3>📂 Categorías</h3>
+            <div class="category-filter">
+                <button class="category-btn active" onclick="filtrarCategoria('all')">Todas las categorías</button>
+                <button class="category-btn" onclick="filtrarCategoria('camisa-hombre')">Camisas Hombre</button>
+                <button class="category-btn" onclick="filtrarCategoria('buso-hombre')">Busos Hombre</button>
+                <button class="category-btn" onclick="filtrarCategoria('dividi-hombre')">Dividis Hombre</button>
+                <button class="category-btn" onclick="filtrarCategoria('buso-mujer')">Busos Mujer</button>
+                <button class="category-btn" onclick="filtrarCategoria('tecnologia')">Tecnología</button>
+                <button class="category-btn" onclick="filtrarCategoria('accesorios')">Accesorios</button>
+            </div>
+        </div>
+        
+        <h3 style="margin-top:0; font-size:0.9rem; color:#888;">PRODUCTOS ENCONTRADOS:</h3>
         <div id="productList">
             <p style="text-align:center; padding:20px;">Cargando...</p>
         </div>
@@ -132,8 +173,12 @@
             <input type="hidden" id="currentMainUrl">
             <img id="previewMain" class="preview-main">
 
-            <label style="margin-top:15px;">Galería Adicional</label>
+            <label style="margin-top:15px;">🖼️ Galería de Imágenes (Para el Ojito)</label>
             <input type="file" id="galleryImages" accept="image/*" multiple>
+            <div id="galleryPreview" class="gallery-preview"></div>
+            
+            <div id="currentGallery" class="current-gallery"></div>
+            <input type="hidden" id="currentGalleryUrls">
         </div>
 
         <div class="form-section">
@@ -150,11 +195,12 @@
 <script>
     const TALLAS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Única'];
     
-    // --- CONFIGURACIÓN ---
     const SUPABASE_URL = 'https://hotcjinskytleluersrc.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhvdGNqaW5za3l0bGVsdWVyc3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMzI2NzIsImV4cCI6MjA4NTgwODY3Mn0.7Z7bOOzj10kwPjwELzGtgHoXPN2BvrAqqp1Fsln-bQI';
     
     let db;
+    let todosLosProductos = [];
+    let categoriaActual = 'all';
 
     document.addEventListener('DOMContentLoaded', () => {
         try {
@@ -173,6 +219,17 @@
                 document.getElementById('previewMain').src = URL.createObjectURL(file);
                 document.getElementById('previewMain').style.display = 'block';
             }
+        };
+        
+        // Preview galería
+        document.getElementById('galleryImages').onchange = evt => {
+            const preview = document.getElementById('galleryPreview');
+            preview.innerHTML = '';
+            Array.from(evt.target.files).forEach(file => {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                preview.appendChild(img);
+            });
         };
     });
 
@@ -198,15 +255,61 @@
         });
     }
 
-    // 1. CARGAR LISTA
+    // CARGAR PRODUCTOS
     async function cargarProductos() {
-        const listDiv = document.getElementById('productList');
-        const { data, error } = await db.from('products').select('id, name, img, price').order('id', { ascending: false });
+        const { data, error } = await db.from('products').select('*').order('id', { ascending: false });
         
-        if(error) { listDiv.innerHTML = "Error cargando lista"; return; }
+        if(error) { 
+            document.getElementById('productList').innerHTML = "Error cargando lista"; 
+            return; 
+        }
+        
+        todosLosProductos = data || [];
+        aplicarFiltros();
+    }
+
+    // APLICAR FILTROS
+    function aplicarFiltros() {
+        const searchTerm = document.getElementById('searchFilter').value.toLowerCase();
+        
+        let filtrados = todosLosProductos;
+        
+        // Filtrar por categoría
+        if (categoriaActual !== 'all') {
+            filtrados = filtrados.filter(p => p.category === categoriaActual);
+        }
+        
+        // Filtrar por búsqueda
+        if (searchTerm) {
+            filtrados = filtrados.filter(p => 
+                p.name.toLowerCase().includes(searchTerm) ||
+                (p.desc && p.desc.toLowerCase().includes(searchTerm))
+            );
+        }
+        
+        renderizarLista(filtrados);
+    }
+
+    function filtrarCategoria(cat) {
+        categoriaActual = cat;
+        
+        // Actualizar botones activos
+        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        aplicarFiltros();
+    }
+
+    function renderizarLista(productos) {
+        const listDiv = document.getElementById('productList');
+        
+        if (productos.length === 0) {
+            listDiv.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">No se encontraron productos</p>';
+            return;
+        }
         
         listDiv.innerHTML = '';
-        data.forEach(p => {
+        productos.forEach(p => {
             listDiv.innerHTML += `
                 <div class="product-item" onclick="cargarParaEditar(${p.id})">
                     <img src="${p.img || 'https://via.placeholder.com/40'}" alt="img">
@@ -219,7 +322,7 @@
         });
     }
 
-    // 2. MODO EDICIÓN
+    // MODO EDICIÓN
     async function cargarParaEditar(id) {
         const { data, error } = await db.from('products').select('*').eq('id', id).single();
         if(error) return alert("Error al cargar producto");
@@ -233,15 +336,32 @@
         document.getElementById('oldPrice').value = p.oldPrice || '';
         document.getElementById('isNew').value = p.isNew ? 'true' : 'false';
         document.getElementById('rating').value = p.rating;
-        // RECUPERAR REVIEWS (VIEWS)
         document.getElementById('reviews').value = p.reviews || 0;
-        
         document.getElementById('desc').value = p.desc;
         document.getElementById('currentMainUrl').value = p.img;
 
         const imgPrev = document.getElementById('previewMain');
         imgPrev.src = p.img;
         imgPrev.style.display = 'block';
+
+        // CARGAR GALERÍA EXISTENTE
+        const currentGallery = document.getElementById('currentGallery');
+        currentGallery.innerHTML = '';
+        
+        if (p.images && Array.isArray(p.images) && p.images.length > 0) {
+            document.getElementById('currentGalleryUrls').value = JSON.stringify(p.images);
+            p.images.forEach((url, index) => {
+                const div = document.createElement('div');
+                div.className = 'current-gallery-item';
+                div.innerHTML = `
+                    <img src="${url}" alt="img${index}">
+                    <button onclick="eliminarImagenGaleria(${index}); event.stopPropagation();">×</button>
+                `;
+                currentGallery.appendChild(div);
+            });
+        } else {
+            document.getElementById('currentGalleryUrls').value = '[]';
+        }
 
         // TALLAS
         document.querySelectorAll('input[type="radio"][value="none"]').forEach(r => r.checked = true);
@@ -273,16 +393,39 @@
         window.scrollTo(0,0);
     }
 
+    function eliminarImagenGaleria(index) {
+        let urls = JSON.parse(document.getElementById('currentGalleryUrls').value || '[]');
+        urls.splice(index, 1);
+        document.getElementById('currentGalleryUrls').value = JSON.stringify(urls);
+        
+        // Re-renderizar
+        const currentGallery = document.getElementById('currentGallery');
+        currentGallery.innerHTML = '';
+        urls.forEach((url, idx) => {
+            const div = document.createElement('div');
+            div.className = 'current-gallery-item';
+            div.innerHTML = `
+                <img src="${url}" alt="img${idx}">
+                <button onclick="eliminarImagenGaleria(${idx}); event.stopPropagation();">×</button>
+            `;
+            currentGallery.appendChild(div);
+        });
+    }
+
     function limpiarFormulario() {
         document.getElementById('editId').value = "";
         document.getElementById('name').value = "";
         document.getElementById('price').value = "";
         document.getElementById('oldPrice').value = "";
         document.getElementById('desc').value = "";
-        document.getElementById('reviews').value = "0"; // Limpiar reviews
+        document.getElementById('reviews').value = "0";
         document.getElementById('currentMainUrl').value = "";
+        document.getElementById('currentGalleryUrls').value = "[]";
         document.getElementById('previewMain').style.display = 'none';
         document.getElementById('mainImage').value = "";
+        document.getElementById('galleryImages').value = "";
+        document.getElementById('galleryPreview').innerHTML = "";
+        document.getElementById('currentGallery').innerHTML = "";
         
         document.querySelectorAll('input[type="radio"][value="none"]').forEach(r => r.checked = true);
 
@@ -293,14 +436,14 @@
         document.getElementById('btnBorrar').style.display = 'none';
     }
 
-    // 3. GUARDAR
+    // GUARDAR PRODUCTO
     async function guardarProducto() {
         const btn = document.getElementById('btnGuardar');
         const status = document.getElementById('status');
         const editId = document.getElementById('editId').value;
         
         btn.disabled = true;
-        btn.innerText = "Procesando...";
+        btn.innerText = "Subiendo imágenes...";
         status.style.display = 'none';
 
         try {
@@ -312,6 +455,7 @@
                 else if (val === 'sold') { sizesList.push(t); soldOutList.push(t); }
             });
 
+            // IMAGEN PRINCIPAL
             let mainUrl = document.getElementById('currentMainUrl').value;
             const mainFile = document.getElementById('mainImage').files[0];
             if(mainFile) {
@@ -320,6 +464,18 @@
 
             if(!mainUrl) throw new Error("Falta la imagen principal");
 
+            // GALERÍA DE IMÁGENES
+            let galleryUrls = JSON.parse(document.getElementById('currentGalleryUrls').value || '[]');
+            const galleryFiles = document.getElementById('galleryImages').files;
+            
+            if (galleryFiles.length > 0) {
+                btn.innerText = `Subiendo ${galleryFiles.length} imágenes de galería...`;
+                for (let i = 0; i < galleryFiles.length; i++) {
+                    const url = await uploadFile(galleryFiles[i], 'gallery');
+                    galleryUrls.push(url);
+                }
+            }
+
             const productData = {
                 name: document.getElementById('name').value,
                 category: document.getElementById('category').value,
@@ -327,13 +483,15 @@
                 oldPrice: document.getElementById('oldPrice').value ? parseFloat(document.getElementById('oldPrice').value) : null,
                 isNew: document.getElementById('isNew').value === 'true',
                 rating: parseFloat(document.getElementById('rating').value),
-                // GUARDAR REVIEWS
                 reviews: parseInt(document.getElementById('reviews').value) || 0,
                 desc: document.getElementById('desc').value,
                 img: mainUrl,
+                images: galleryUrls, // ESTO ES LO QUE FALTABA
                 sizes: sizesList.join(', '),
                 sold_out: soldOutList.join(', ')
             };
+
+            btn.innerText = "Guardando en base de datos...";
 
             let errorDB;
             if (editId) {
