@@ -1,5 +1,5 @@
 // ==========================================
-// GRAVITY SHOP - JavaScript (Arquitectura Original + Tallas + WhatsApp Directo)
+// GRAVITY SHOP - JavaScript (VERSIÓN CORREGIDA - TODOS LOS BUGS SOLUCIONADOS)
 // ==========================================
 
 // 1. CONFIGURACIÓN DE SUPABASE
@@ -293,7 +293,7 @@ function createProductCard(product) {
                         <span class="product-price">$${product.price.toFixed(2)}</span>
                         ${product.oldPrice ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
                     </div>
-                    <button class="add-cart-btn" onclick="addToCart(${product.id})">
+                    <button class="add-cart-btn" onclick="quickView(${product.id})">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -313,7 +313,7 @@ function getCategoryName(category) {
 }
 
 // ==========================================
-// FILTROS, CARRITO Y WHATSAPP
+// FILTROS Y CARRITO
 // ==========================================
 function filterByCategory(category) {
     currentFilter = category;
@@ -328,31 +328,32 @@ function filterByCategory(category) {
 
 function sortProducts() { renderProducts(); }
 
-function addToCart(id) {
-    const product = products.find(p => p.id === id);
-    if (!product) return;
-    const existingItem = cart.find(item => item.id === id);
-    if (existingItem) existingItem.qty++;
-    else cart.push({ ...product, qty: 1 });
-    updateCartUI();
-    showNotification(`¡${product.name} agregado al carrito!`);
-    toggleCart(true);
-}
-
-function updateQty(id, change) {
-    const item = cart.find(c => c.id === id);
+// ==========================================
+// FUNCIÓN updateQty CORREGIDA
+// ==========================================
+function updateQty(id, change, size = '') {
+    const item = cart.find(c => c.id === id && (size ? c.size === size : !c.size));
     if (!item) return;
     item.qty += change;
-    if (item.qty <= 0) removeFromCart(id);
-    else updateCartUI();
+    if (item.qty <= 0) {
+        removeFromCart(id, size);
+    } else {
+        updateCartUI();
+    }
 }
 
-function removeFromCart(id) {
-    cart = cart.filter(item => item.id !== id);
+// ==========================================
+// FUNCIÓN removeFromCart CORREGIDA
+// ==========================================
+function removeFromCart(id, size = '') {
+    cart = cart.filter(item => !(item.id === id && (size ? item.size === size : !item.size)));
     updateCartUI();
     showNotification('Producto eliminado del carrito');
 }
 
+// ==========================================
+// FUNCIÓN updateCartUI CORREGIDA CON TALLAS
+// ==========================================
 function updateCartUI() {
     localStorage.setItem('cart', JSON.stringify(cart));
     const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -371,27 +372,33 @@ function updateCartUI() {
     
     let total = 0;
     container.innerHTML = cart.map(item => {
-    const itemTotal = item.price * item.qty;
-    total += itemTotal;
-    return `
-        <div class="cart-item">
-            <img src="${item.img}" 
-                 class="cart-item-image" 
-                 alt="${item.name}" 
-                 onclick="quickView(${item.id}); event.stopPropagation();" 
-                 style="cursor: pointer;">
-            <div class="cart-item-info">
+        const itemTotal = item.price * item.qty;
+        total += itemTotal;
+        
+        // MOSTRAR TALLA SI EXISTE
+        const sizeInfo = item.size ? `<div style="font-size: 0.85rem; color: #6b7280; margin-top: 3px; font-weight: 600;">📏 Talla: ${item.size}</div>` : '';
+        
+        return `
+            <div class="cart-item">
+                <img src="${item.img}" 
+                     class="cart-item-image" 
+                     alt="${item.name}" 
+                     onclick="quickView(${item.id}); event.stopPropagation();" 
+                     style="cursor: pointer;" 
+                     title="Clic para ver detalles">
+                <div class="cart-item-info">
                     <div class="cart-item-name">${item.name}</div>
+                    ${sizeInfo}
                     <div class="cart-item-price">$${item.price.toFixed(2)}</div>
                     <div class="quantity-controls">
-                        <button class="qty-btn" onclick="updateQty(${item.id}, -1)"> <i class="fas fa-minus"></i> </button>
+                        <button class="qty-btn" onclick="updateQty(${item.id}, -1, '${item.size || ''}')"> <i class="fas fa-minus"></i> </button>
                         <span class="qty-display">${item.qty}</span>
-                        <button class="qty-btn" onclick="updateQty(${item.id}, 1)"> <i class="fas fa-plus"></i> </button>
+                        <button class="qty-btn" onclick="updateQty(${item.id}, 1, '${item.size || ''}')"> <i class="fas fa-plus"></i> </button>
                     </div>
                 </div>
                 <div style="text-align: right;">
                     <div style="font-weight: 700; margin-bottom: 0.5rem;">$${itemTotal.toFixed(2)}</div>
-                    <button class="remove-btn" onclick="removeFromCart(${item.id})"> <i class="fas fa-trash"></i> </button>
+                    <button class="remove-btn" onclick="removeFromCart(${item.id}, '${item.size || ''}')"> <i class="fas fa-trash"></i> </button>
                 </div>
             </div>
         `;
@@ -415,6 +422,9 @@ function toggleCart(forceOpen = false) {
     }
 }
 
+// ==========================================
+// FUNCIÓN checkoutWhatsApp CORREGIDA CON TALLAS
+// ==========================================
 function checkoutWhatsApp() {
     if (cart.length === 0) {
         showNotification('Tu carrito está vacío', 'error');
@@ -425,7 +435,7 @@ function checkoutWhatsApp() {
     cart.forEach(item => {
         const itemTotal = item.price * item.qty;
         total += itemTotal;
-        const sizeInfo = item.sizes ? ` (Tallas: ${item.sizes})` : '';
+        const sizeInfo = item.size ? ` - Talla: *${item.size}*` : '';
         message += `▪️ *${item.name}*${sizeInfo}\n   ╰ ${item.qty} x $${item.price.toFixed(2)} = *$${itemTotal.toFixed(2)}*\n\n`;
     });
     message += `─────────────────────\n💰 *TOTAL A PAGAR: $${total.toFixed(2)}*\n─────────────────────\n\n👋 ¡Hola! Ya tengo listo mi pedido.`;
@@ -433,7 +443,7 @@ function checkoutWhatsApp() {
 }
 
 // ==========================================
-// VISTA RÁPIDA (MODAL)
+// VISTA RÁPIDA (MODAL) - CORREGIDA
 // ==========================================
 window.changeModalImage = function(src, element) {
     const mainImg = document.getElementById('quickViewMainImg');
@@ -448,21 +458,36 @@ window.changeModalImage = function(src, element) {
     if(element) element.classList.add('active');
 }
 
-// MODIFICAR LA FUNCIÓN quickView() COMPLETA
-// Busca la función quickView(id) y REEMPLÁZALA por esta:
-
+// ==========================================
+// FUNCIÓN quickView CORREGIDA - IMAGEN PRINCIPAL EN GALERÍA
+// ==========================================
 function quickView(id) {
     const product = products.find(p => p.id === id);
     if (!product) return;
     
     let imagesHtml = '';
+    
+    // CONSTRUIR GALERÍA COMPLETA (IMAGEN PRINCIPAL + IMÁGENES ADICIONALES)
+    let allImages = [];
+    
+    // 1. Agregar la imagen principal primero
+    if (product.img) {
+        allImages.push(product.img);
+    }
+    
+    // 2. Agregar imágenes de la galería
     if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-        const thumbnails = product.images.map((img, index) => 
+        allImages = allImages.concat(product.images);
+    }
+    
+    // 3. Generar HTML de la galería
+    if (allImages.length > 0) {
+        const thumbnails = allImages.map((img, index) => 
             `<img src="${img}" class="thumb-img ${index === 0 ? 'active' : ''}" onclick="changeModalImage('${img}', this)">`
         ).join('');
-        imagesHtml = `<div class="gallery-container"><div class="main-image-container"><img src="${product.images[0]}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}"></div><div class="thumbnails-row">${thumbnails}</div></div>`;
+        imagesHtml = `<div class="gallery-container"><div class="main-image-container"><img src="${allImages[0]}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}"></div><div class="thumbnails-row">${thumbnails}</div></div>`;
     } else {
-        const imageSrc = product.img || 'https://via.placeholder.com/300?text=Sin+Imagen';
+        const imageSrc = 'https://via.placeholder.com/300?text=Sin+Imagen';
         imagesHtml = `<div class="gallery-container"><div class="main-image-container"><img src="${imageSrc}" id="quickViewMainImg" class="modal-main-img" alt="${product.name}"></div></div>`;
     }
 
@@ -532,7 +557,9 @@ function selectSize(button, size) {
     document.getElementById('selectedSize').value = size;
 }
 
-// NUEVA FUNCIÓN: Agregar al carrito con talla
+// ==========================================
+// FUNCIÓN addToCartWithSize CORREGIDA
+// ==========================================
 function addToCartWithSize(id) {
     const product = products.find(p => p.id === id);
     if (!product) return;
@@ -569,79 +596,8 @@ function addToCartWithSize(id) {
     }
     
     updateCartUI();
-    showNotification(`¡${product.name} agregado al carrito!`);
+    showNotification(`✅ ${product.name} agregado al carrito!`);
     toggleCart(true);
-}
-
-// MODIFICAR updateCartUI() para mostrar la talla
-// Busca la función updateCartUI() y REEMPLAZA la parte del HTML por esto:
-
-// Dentro de updateCartUI(), en la parte donde se genera el HTML del carrito:
-container.innerHTML = cart.map(item => {
-    const itemTotal = item.price * item.qty;
-    total += itemTotal;
-    
-    // Mostrar talla si existe
-    const sizeInfo = item.size ? `<div style="font-size: 0.8rem; color: #666; margin-top: 2px;">Talla: ${item.size}</div>` : '';
-    
-    return `
-        <div class="cart-item">
-            <img src="${item.img}" 
-                 class="cart-item-image" 
-                 alt="${item.name}" 
-                 onclick="quickView(${item.id}); event.stopPropagation();" 
-                 style="cursor: pointer;" 
-                 title="Clic para ver detalles">
-            <div class="cart-item-info">
-                <div class="cart-item-name">${item.name}</div>
-                ${sizeInfo}
-                <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-                <div class="quantity-controls">
-                    <button class="qty-btn" onclick="updateQty(${item.id}, -1, '${item.size || ''}')"> <i class="fas fa-minus"></i> </button>
-                    <span class="qty-display">${item.qty}</span>
-                    <button class="qty-btn" onclick="updateQty(${item.id}, 1, '${item.size || ''}')"> <i class="fas fa-plus"></i> </button>
-                </div>
-            </div>
-            <div style="text-align: right;">
-                <div style="font-weight: 700; margin-bottom: 0.5rem;">$${itemTotal.toFixed(2)}</div>
-                <button class="remove-btn" onclick="removeFromCart(${item.id}, '${item.size || ''}')"> <i class="fas fa-trash"></i> </button>
-            </div>
-        </div>
-    `;
-}).join('');
-
-// MODIFICAR updateQty() para considerar tallas
-function updateQty(id, change, size = '') {
-    const item = cart.find(c => c.id === id && (size ? c.size === size : !c.size));
-    if (!item) return;
-    item.qty += change;
-    if (item.qty <= 0) removeFromCart(id, size);
-    else updateCartUI();
-}
-
-// MODIFICAR removeFromCart() para considerar tallas
-function removeFromCart(id, size = '') {
-    cart = cart.filter(item => !(item.id === id && (size ? item.size === size : !item.size)));
-    updateCartUI();
-    showNotification('Producto eliminado del carrito');
-}
-
-// MODIFICAR checkoutWhatsApp() para incluir tallas
-function checkoutWhatsApp() {
-    if (cart.length === 0) {
-        showNotification('Tu carrito está vacío', 'error');
-        return;
-    }
-    let total = 0;
-    let message = "✨ *NUEVO PEDIDO - GRAVITY SHOP X* ✨\n─────────────────────\n🛒 *RESUMEN DE COMPRA:*\n\n";
-    cart.forEach(item => {
-        const itemTotal = item.price * item.qty;
-        total += itemTotal;
-        const sizeInfo = item.size ? ` - Talla: *${item.size}*` : '';
-        message += `▪️ *${item.name}*${sizeInfo}\n   ╰ ${item.qty} x $${item.price.toFixed(2)} = *$${itemTotal.toFixed(2)}*\n\n`;
-    });
-    message += `─────────────────────\n💰 *TOTAL A PAGAR: $${total.toFixed(2)}*\n─────────────────────\n\n👋 ¡Hola! Ya tengo listo mi pedido.`;
-    window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
 }
 
 function closeQuickView() {
@@ -712,14 +668,22 @@ function loadTheme() {
 
 function toggleTheme() { }
 
+// ==========================================
+// FUNCIÓN showNotification CORREGIDA - SE OCULTA AUTOMÁTICAMENTE
+// ==========================================
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
     const msgElement = document.getElementById('notifMsg');
     if (!notification || !msgElement) return;
+    
     msgElement.textContent = message;
     notification.style.borderLeftColor = type === 'error' ? 'var(--danger)' : 'var(--success)';
     notification.classList.add('show');
-    setTimeout(() => { notification.classList.remove('show'); }, 3000);
+    
+    // OCULTAR AUTOMÁTICAMENTE DESPUÉS DE 3 SEGUNDOS
+    setTimeout(() => { 
+        notification.classList.remove('show'); 
+    }, 3000);
 }
 
 function initScrollEffects() {
@@ -781,5 +745,3 @@ document.querySelectorAll('.nav-link:not(.link-split *)').forEach(link => {
         }
     });
 });
-
-// El manejo del submenú de ROPA ahora está en DOMContentLoaded arriba
