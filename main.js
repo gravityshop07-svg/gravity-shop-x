@@ -33,6 +33,22 @@ let slideInterval;
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
+    
+    // IMPORTANTE: Asegurar que el evento del submenú funcione
+    const ropaToggle = document.querySelector('.link-split');
+    if (ropaToggle) {
+        // Remover cualquier listener anterior
+        ropaToggle.removeEventListener('click', toggleSubmenu);
+        ropaToggle.removeEventListener('touchstart', toggleSubmenu);
+        
+        // Agregar listeners frescos
+        ropaToggle.addEventListener('click', toggleSubmenu, false);
+        ropaToggle.addEventListener('touchstart', function(e) {
+            if (window.innerWidth <= 992) {
+                toggleSubmenu(e);
+            }
+        }, { passive: false });
+    }
 });
 
 async function initApp() {
@@ -554,12 +570,14 @@ document.querySelectorAll('.dropdown-menu a').forEach(link => {
     });
 });
 
-// 3. Submenú Ropa (ACORDEÓN - Abrir/Cerrar con cada clic)
+// 3. Submenú Ropa (ACORDEÓN SIMPLE - Abrir/Cerrar con cada clic)
 function toggleSubmenu(event) {
-    // IMPORTANTE: Detener TODA propagación del evento
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
+    // Detener TODA propagación
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+    }
     
     // En PC, no hacer nada (funciona por hover)
     if (window.innerWidth > 992) {
@@ -567,29 +585,31 @@ function toggleSubmenu(event) {
     }
 
     const submenu = document.getElementById('ropaSubmenu');
-    const arrow = event.currentTarget.querySelector('.arrow-icon');
+    const arrow = document.querySelector('.arrow-icon');
 
     if (!submenu) {
-        console.log('No se encontró el submenú ropaSubmenu');
+        console.log('ERROR: No se encontró ropaSubmenu');
         return;
     }
 
-    // Alternar entre mostrar/ocultar
-    const estaAbierto = submenu.classList.contains('show');
-
-    if (estaAbierto) {
-        // CERRAR submenú (contraer)
+    // Toggle simple: si está visible, ocultar. Si está oculto, mostrar.
+    if (submenu.classList.contains('show')) {
+        // CERRAR
         submenu.classList.remove('show');
+        submenu.style.display = 'none'; // Forzar ocultación
         if (arrow) {
             arrow.style.transform = 'rotate(0deg)';
-            arrow.style.transition = 'transform 0.3s ease';
         }
+        console.log('Submenú CERRADO');
     } else {
-        // ABRIR submenú (expandir)
+        // ABRIR
         submenu.classList.add('show');
+        submenu.style.display = 'block'; // Forzar visualización
         if (arrow) {
             arrow.style.transform = 'rotate(180deg)';
-            arrow.style.transition = 'transform 0.3s ease';
         }
+        console.log('Submenú ABIERTO');
     }
+    
+    return false; // Extra seguridad
 }
