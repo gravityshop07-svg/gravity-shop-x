@@ -1827,3 +1827,33 @@ body[data-theme="dark"] .size-btn.size-sold-out {
         max-width: 150px !important; /* Aún más pequeño en pantallas muy chicas */
     }
 }
+@media (max-width: 768px) {
+    .slider-arrow.prev { 
+        left: 0.5rem !important; /* Más pegada al borde izquierdo */
+    }
+    .slider-arrow.next { 
+        right: 0.5rem !important; /* Más pegada al borde derecho */
+    }
+    
+    /* Hacer las flechas más pequeñas y transparentes */
+    .slider-arrow {
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 0.8rem !important;
+        background: rgba(0, 0, 0, 0.3) !important;
+        backdrop-filter: blur(5px) !important;
+    }
+}
+/* Agregar al final de style.css */
+
+@media (max-width: 768px) {
+    .hero-text h1 { 
+        font-size: 1.5rem !important; /* Más pequeño */
+        line-height: 1.2 !important;
+    }
+    
+    .hero-text p { 
+        font-size: 0.85rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+}
