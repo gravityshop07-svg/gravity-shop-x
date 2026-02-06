@@ -1797,3 +1797,16 @@ body[data-theme="dark"] .size-btn.size-sold-out {
 .size-selector::-webkit-scrollbar-thumb:hover {
     background: #4f46e5;
 }
+@media (max-width: 768px) {
+    .card-product .product-rating {
+        justify-content: flex-start !important;
+        text-align: left !important;
+    }
+}
+
+/* También para tablets */
+@media (max-width: 992px) {
+    .card-product .product-rating {
+        justify-content: flex-start !important;
+    }
+}
