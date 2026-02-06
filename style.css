@@ -1810,3 +1810,20 @@ body[data-theme="dark"] .size-btn.size-sold-out {
         justify-content: flex-start !important;
     }
 }
+
+/* Agregar al final de style.css */
+
+/* Reducir logo en móviles */
+@media (max-width: 768px) {
+    .hero-logo-large {
+        max-width: 180px !important; /* Reducido de 280px a 180px */
+        margin: 0 auto 1rem auto !important;
+    }
+}
+
+/* Para móviles muy pequeños */
+@media (max-width: 480px) {
+    .hero-logo-large {
+        max-width: 150px !important; /* Aún más pequeño en pantallas muy chicas */
+    }
+}
