@@ -29,6 +29,21 @@ let currentSlide = 0;
 let slideInterval;
 
 // ==========================================
+// FUNCIÓN AUXILIAR: GENERAR ESTRELLAS
+// ==========================================
+function generateStars(rating) {
+    const fullStars = Math.floor(rating || 5);
+    const hasHalfStar = (rating || 5) % 1 !== 0;
+    
+    let starsHtml = '<i class="fas fa-star"></i>'.repeat(fullStars);
+    if (hasHalfStar) {
+        starsHtml += '<i class="fas fa-star-half-alt"></i>';
+    }
+    
+    return starsHtml;
+}
+
+// ==========================================
 // INICIALIZACIÓN
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -283,8 +298,7 @@ function createProductCard(product) {
                 ${sizesHtml}
                 <div class="product-rating">
                     <span class="stars">
-                        ${'<i class="fas fa-star"></i>'.repeat(Math.floor(product.rating || 5))}
-                        ${(product.rating || 5) % 1 !== 0 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                        ${generateStars(product.rating)}
                     </span>
                     <span>${product.rating || 5}</span>
                 </div>
@@ -524,7 +538,9 @@ function quickView(id) {
                 <h2 style="margin-bottom: 1rem;">${product.name}</h2>
                 ${sizeHtml}
                 <div class="product-rating" style="margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center; justify-content: center;">
-                    <span class="stars">${'<i class="fas fa-star"></i>'.repeat(Math.floor(product.rating || 5))}</span>
+                    <span class="stars">
+                        ${generateStars(product.rating)}
+                    </span>
                     <span>${product.rating || 5} (${product.reviews || 0} reseñas)</span>
                 </div>
                 <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.8; text-align: center;">${product.desc || ''}</p>
