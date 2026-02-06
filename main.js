@@ -671,19 +671,38 @@ function toggleTheme() { }
 // ==========================================
 // FUNCIÓN showNotification CORREGIDA - SE OCULTA AUTOMÁTICAMENTE
 // ==========================================
+let notificationTimeout; // Variable global para el timeout
+
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
     const msgElement = document.getElementById('notifMsg');
     if (!notification || !msgElement) return;
     
-    msgElement.textContent = message;
-    notification.style.borderLeftColor = type === 'error' ? 'var(--danger)' : 'var(--success)';
-    notification.classList.add('show');
+    // Limpiar timeout anterior si existe
+    if (notificationTimeout) {
+        clearTimeout(notificationTimeout);
+    }
     
-    // OCULTAR AUTOMÁTICAMENTE DESPUÉS DE 3 SEGUNDOS
-    setTimeout(() => { 
-        notification.classList.remove('show'); 
-    }, 3000);
+    // Forzar reset de la notificación
+    notification.classList.remove('show');
+    notification.style.opacity = '0';
+    notification.style.visibility = 'hidden';
+    
+    // Pequeño delay para permitir que la animación se resetee
+    setTimeout(() => {
+        msgElement.textContent = message;
+        notification.style.borderLeftColor = type === 'error' ? 'var(--danger)' : 'var(--success)';
+        notification.style.opacity = '1';
+        notification.style.visibility = 'visible';
+        notification.classList.add('show');
+        
+        // OCULTAR AUTOMÁTICAMENTE DESPUÉS DE 3 SEGUNDOS
+        notificationTimeout = setTimeout(() => { 
+            notification.classList.remove('show');
+            notification.style.opacity = '0';
+            notification.style.visibility = 'hidden';
+        }, 3000);
+    }, 50);
 }
 
 function initScrollEffects() {
